@@ -4,9 +4,108 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Paint"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
+        mc:Ignorable="d" WindowState="Maximized"
+       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+xmlns:r="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
+        Title="MainWindow" Height="350" Width="525"
+        xmlns:ViewModel="clr-namespace:Paint.ViewModel">
+    <Window.Resources>
+        <ViewModel:MainWindowViewModel x:Key="KeyMainWindowVIewModel"></ViewModel:MainWindowViewModel>
+    </Window.Resources>
+    <Grid DataContext="{StaticResource KeyMainWindowVIewModel}">
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <r:Ribbon Grid.Row="0">
+
+            <r:Ribbon.HelpPaneContent>
+                <r:RibbonButton Height="30" SmallImageSource="Resources/help.png"></r:RibbonButton>
+            </r:Ribbon.HelpPaneContent>
+            <r:Ribbon.QuickAccessToolBar>
+                <r:RibbonQuickAccessToolBar>
+                    <r:RibbonButton Margin="50,0,0,0" Height="20" SmallImageSource="Resources/save.png"></r:RibbonButton>
+                    <r:RibbonSplitButton   Height="20" SmallImageSource="Resources/edit_undo.png">
+                        <r:RibbonSplitMenuItem Header="Undo 1" />
+                        <r:RibbonSplitMenuItem Header="Undo 2" />
+                        <r:RibbonSplitMenuItem Header="Undo 3" />
+                    </r:RibbonSplitButton>
+                    <r:RibbonSplitButton   Height="20" SmallImageSource="Resources/edit_redo.png">
+                        <r:RibbonSplitMenuItem Header="Redo 1" />
+                        <r:RibbonSplitMenuItem Header="Redo 2" />
+                        <r:RibbonSplitMenuItem Header="Redo 3"  />
+                    </r:RibbonSplitButton>
+                </r:RibbonQuickAccessToolBar>
+            </r:Ribbon.QuickAccessToolBar>
+            <!--#region Application Menu-->
+            <r:Ribbon.ApplicationMenu>
+                <r:RibbonApplicationMenu>
+                    <r:RibbonApplicationMenuItem Width="200" ImageSource="Resources/new.png"  Header="New"></r:RibbonApplicationMenuItem>
+                    <r:RibbonApplicationMenuItem ImageSource="Resources/folder_open.png"  Header="Open"></r:RibbonApplicationMenuItem>
+                    <r:RibbonApplicationMenuItem ImageSource="Resources/save.png"  Header="Save"></r:RibbonApplicationMenuItem>
+                    <r:RibbonApplicationMenuItem ImageSource="Resources/exit.png"  Header="Exit"></r:RibbonApplicationMenuItem>
+                </r:RibbonApplicationMenu>
+            </r:Ribbon.ApplicationMenu>
+
+            <r:RibbonTab Header="Home" KeyTip="H" >
+                <r:RibbonGroup Header="Clipboard">
+                    <r:RibbonMenuButton Width="70" LargeImageSource="Resources/paste.png" Label="Paste" KeyTip="V">
+                        <r:RibbonMenuItem ImageSource="Resources/paste.png" Header="Keep Text Only" KeyTip="T"/>
+                        <r:RibbonMenuItem ImageSource="Resources/paste.png" Header="Paste Special..." KeyTip="S"/>
+                    </r:RibbonMenuButton>
+                    <r:RibbonButton Width="70" SmallImageSource="Resources/cut.png" Label="Cut" KeyTip="X" />
+                    <r:RibbonButton Width="70" SmallImageSource="Resources/copy.png" Label="Copy" KeyTip="C" />
+                </r:RibbonGroup>
+                <r:RibbonGroup Header="Image">
+                    <r:RibbonMenuButton Width="70"  LargeImageSource="Resources/select.png" Label="Paste" KeyTip="V">
+                    </r:RibbonMenuButton>
+                    <r:RibbonButton SmallImageSource="Resources/cut.png" Width="70" Label="Crop" KeyTip="X" />
+                    <r:RibbonButton SmallImageSource="Resources/resize.png" Width="70" Label="Resize" KeyTip="C" />
+                    <r:RibbonButton SmallImageSource="Resources/rotate.png" Width="70" Label="Rotate" KeyTip="C" />
+                </r:RibbonGroup>
+                <r:RibbonGroup Width="100" Header="Tool">
+                    <r:RibbonButton  SmallImageSource="Resources/pen.png" Width="90" Label="Pen" KeyTip="X" />
+                    <r:RibbonButton SmallImageSource="Resources/text.png" Width="90" Label="Text" KeyTip="C" />
+                    <r:RibbonButton SmallImageSource="Resources/eraser.png" Width="90" Label="Eraser" KeyTip="C" />
+                </r:RibbonGroup>
+                <r:RibbonGroup Width="100" Header="Shapes">
+                    <r:RibbonButton Height="30"  Width="30" SmallImageSource="Resources/line.png"   KeyTip="X" />
+                    <r:RibbonButton Height="30"  Width="30" SmallImageSource="Resources/circle.png"   KeyTip="C" />
+                    <r:RibbonButton Height="30"  Width="30" SmallImageSource="Resources/hexagon.png"   KeyTip="C" />
+                    <r:RibbonButton  Height="30"  Width="30" SmallImageSource="Resources/rectangle.png"   KeyTip="X" />
+                    <r:RibbonButton Height="30"  Width="30" SmallImageSource="Resources/tritangle.png"   KeyTip="C" />
+                    <r:RibbonButton Height="30"  Width="30" SmallImageSource="Resources/star.png"   KeyTip="C" />
+                </r:RibbonGroup>
+                <r:RibbonGroup  Header="Color">
+                    <r:RibbonButton Width="70" Height="60"  BorderBrush="Black" BorderThickness="1" LargeImageSource="Resources/star.png" Label="Color 1" KeyTip="V">
+                        
+                    </r:RibbonButton>
+                    <r:RibbonButton Width="70" Height="60" Background="White" BorderBrush="Black" BorderThickness="1"  LargeImageSource="Resources/star.png"  Label="Color2" KeyTip="V">
+                    </r:RibbonButton>
+                    <r:RibbonButton Width="70"  LargeImageSource="Resources/color-picker.png" Label="Color" KeyTip="V">
+                    </r:RibbonButton>
+                </r:RibbonGroup>
+            </r:RibbonTab>
+        </r:Ribbon>
+        <Canvas x:Name="Canvas"  
+                 Background="Aqua"		Grid.Row="1"	   >
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDown">
+                    <i:InvokeCommandAction CommandParameter="{Binding ElementName=Canvas}"  Command="{Binding Canvas_MouseDown}" 
+                              />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="MouseMove">
+                    <i:InvokeCommandAction CommandParameter="{Binding ElementName=Canvas}"  Command="{Binding Canvas_MouseMove}" 
+                              />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="MouseUp">
+                    <i:InvokeCommandAction CommandParameter="{Binding ElementName=Canvas}"  Command="{Binding Canvas_MouseUp}" 
+                              />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+          
+        </Canvas>
         
     </Grid>
 </Window>
