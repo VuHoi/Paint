@@ -6,8 +6,9 @@
         xmlns:local="clr-namespace:Paint"
         mc:Ignorable="d" WindowState="Maximized"
        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-xmlns:r="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
+       xmlns:r="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
         Title="MainWindow" Height="350" Width="525"
+        
         xmlns:ViewModel="clr-namespace:Paint.ViewModel">
     <Window.Resources>
         <ViewModel:MainWindowViewModel x:Key="KeyMainWindowVIewModel"></ViewModel:MainWindowViewModel>
@@ -77,14 +78,53 @@ xmlns:r="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControls
                     <r:RibbonButton Height="30"  Width="30" SmallImageSource="Resources/tritangle.png"   KeyTip="C" />
                     <r:RibbonButton Height="30"  Width="30" SmallImageSource="Resources/star.png"   KeyTip="C" />
                 </r:RibbonGroup>
-                <r:RibbonGroup  Header="Color">
-                    <r:RibbonButton Width="70" Height="60"  BorderBrush="Black" BorderThickness="1" LargeImageSource="Resources/star.png" Label="Color 1" KeyTip="V">
+                <r:RibbonGroup>
+                    <r:RibbonMenuButton  Name="cmbSize" LargeImageSource="Resources/thicknesses.png" Label="Size">
+                        <r:RibbonMenuItem Name="item1px" Command="{Binding StrokeThicknessCommand}" CommandParameter="{Binding ElementName=item1px}"  Height="30" ImageSource="Resources/thickness1.png"  Header="1px" ></r:RibbonMenuItem>
+                        <r:RibbonMenuItem Name="item3px" Command="{Binding StrokeThicknessCommand}" CommandParameter="{Binding ElementName=item3px}" Height="30"  ImageSource="Resources/thickness3.png" Header="3px" ></r:RibbonMenuItem>
+                        <r:RibbonMenuItem Name="item5px" Command="{Binding StrokeThicknessCommand}" CommandParameter="{Binding ElementName=item5px}" Height="30" ImageSource="Resources/thickness5.png" Header="5px" ></r:RibbonMenuItem>
+                        <r:RibbonMenuItem Name="item10px" Command="{Binding StrokeThicknessCommand}" CommandParameter="{Binding ElementName=item10px}" Height="30" ImageSource="Resources/thickness7.png" Header="10px" ></r:RibbonMenuItem>
+                       
+                    </r:RibbonMenuButton>
+                </r:RibbonGroup>
+                <r:RibbonGroup 
+                               Header="Color">
+                    <Button Command="{Binding ChooseColor1Command}" BorderThickness="0" Padding="2,0,0,0"  Height="65"  Width="70">
+                        <StackPanel>
+                            <TextBlock Background="{Binding Color1}" Height="30" Width="30" ></TextBlock>
+                            <TextBlock Padding="0,2,0,0"  Text="Color 1"></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Command="{Binding ChooseColor2Command}" BorderThickness="0" Padding="2,0,0,0" Height="65"  Width="70">
+                        <StackPanel>
+                            <TextBlock Background="{Binding Color2}" Height="30" Width="30" ></TextBlock>
+                            <TextBlock Padding="0,2,0,0" Text="Color 2"></TextBlock>
+                        </StackPanel>
                         
-                    </r:RibbonButton>
-                    <r:RibbonButton Width="70" Height="60" Background="White" BorderBrush="Black" BorderThickness="1"  LargeImageSource="Resources/star.png"  Label="Color2" KeyTip="V">
-                    </r:RibbonButton>
+                    </Button>
+                    <r:RibbonControlGroup>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor1" CommandParameter="{Binding ElementName=btncolor1}" Height="30" Width="30" Background="Black"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor2" CommandParameter="{Binding ElementName=btncolor2}" Height="30" Width="30" Background="White"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor3" CommandParameter="{Binding ElementName=btncolor3}" Height="30" Width="30" Background="Blue"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor4" CommandParameter="{Binding ElementName=btncolor4}" Height="30" Width="30" Background="yellow"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor5" CommandParameter="{Binding ElementName=btncolor5}" Height="30" Width="30" Background="Orange"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor6" CommandParameter="{Binding ElementName=btncolor6}" Height="30" Width="30" Background="Brown"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor7" CommandParameter="{Binding ElementName=btncolor7}" Height="30" Width="30" Background="BlueViolet"></r:RibbonButton>
+
+                    </r:RibbonControlGroup>
+                    <r:RibbonControlGroup>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor8" CommandParameter="{Binding ElementName=btncolor8}" Height="30" Width="30" Background="Chocolate"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor9" CommandParameter="{Binding ElementName=btncolor9}" Height="30" Width="30" Background="DarkOliveGreen"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor10" CommandParameter="{Binding ElementName=btncolor10}" Height="30" Width="30" Background="DimGray"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor11" CommandParameter="{Binding ElementName=btncolor11}" Height="30" Width="30" Background="Firebrick"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor12" CommandParameter="{Binding ElementName=btncolor12}" Height="30" Width="30" Background="DarkRed"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor13" CommandParameter="{Binding ElementName=btncolor13}" Height="30" Width="30" Background="Red"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor14" CommandParameter="{Binding ElementName=btncolor14}" Height="30" Width="30" Background="Green"></r:RibbonButton>
+
+                    </r:RibbonControlGroup>
                     <r:RibbonButton Width="70"  LargeImageSource="Resources/color-picker.png" Label="Color" KeyTip="V">
                     </r:RibbonButton>
+                    
                 </r:RibbonGroup>
             </r:RibbonTab>
         </r:Ribbon>

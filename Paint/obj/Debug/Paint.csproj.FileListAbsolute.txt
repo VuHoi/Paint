@@ -17,11 +17,7 @@ C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\obj\Debug\Paint.pdb
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\VinaBaseClass.dll
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Microsoft.Windows.Shell.dll
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\EntityFramework.dll
-C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\RibbonControlsLibrary.pdb
-C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\RibbonControlsLibrary.xml
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\VinaBaseClass.pdb
-C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Microsoft.Windows.Shell.pdb
-C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Microsoft.Windows.Shell.xml
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\EntityFramework.xml
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\save.png
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\exit.png
@@ -51,3 +47,11 @@ C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\color-pick
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Microsoft.Expression.Interactions.dll
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\System.Windows.Interactivity.dll
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Microsoft.Expression.Interactions.xml
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\System.Windows.Interactivity.xml
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\Capture.PNG
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\thickness1.png
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\thickness3.png
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\thickness5.png
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\thickness7.png
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\thicknesses.png

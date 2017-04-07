@@ -190,4 +190,19 @@
   <data name="tritangle" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tritangle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Thickness1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\thickness1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Thickness3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\thickness3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Thickness5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\thickness5.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Thickness7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\thickness7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Thicknesses" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\thicknesses.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

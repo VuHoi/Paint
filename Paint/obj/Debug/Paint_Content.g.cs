@@ -8,10 +8,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/capture.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/color-picker.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/hexagon.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/rectangle.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/star.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/thickness1.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/thickness3.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/thickness5.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/thickness7.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/thicknesses.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/tritangle.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/circle.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/line.png")]
