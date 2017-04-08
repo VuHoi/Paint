@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace Paint.ViewModel
 {
-    public class RelayCommand<T> : ICommand
+    class RelayCommand<T> : ICommand
     {
         #region Fields
 

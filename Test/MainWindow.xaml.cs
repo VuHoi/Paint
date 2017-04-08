@@ -23,7 +23,14 @@ namespace Test
         public MainWindow()
         {
             InitializeComponent();
-           
+            Line l = new Line();
+            l.X1 = 10;
+            l.Y1 = 10;
+            l.X2 = 200;
+            l.Y2 = 500;
+            l.Stroke = new SolidColorBrush(Colors.Black);
+            l.StrokeThickness = 5;
+            c.Children.Add(l);
         }
     }
 }

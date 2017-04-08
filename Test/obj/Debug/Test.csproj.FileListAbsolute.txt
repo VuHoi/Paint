@@ -1,0 +1,14 @@
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Test\bin\Debug\Test.exe.config
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Test\bin\Debug\Test.exe
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Test\bin\Debug\Test.pdb
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Test\obj\Debug\Test.csprojResolveAssemblyReference.cache
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Test\obj\Debug\MainWindow.g.cs
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Test\obj\Debug\App.g.cs
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Test\obj\Debug\Test_MarkupCompile.cache
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Test\obj\Debug\Test_MarkupCompile.lref
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Test\obj\Debug\MainWindow.baml
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Test\obj\Debug\Test.g.resources
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Test\obj\Debug\Test.Properties.Resources.resources
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Test\obj\Debug\Test.csproj.GenerateResource.Cache
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Test\obj\Debug\Test.exe
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Test\obj\Debug\Test.pdb
