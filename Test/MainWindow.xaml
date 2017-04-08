@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <Canvas>
+        <Canvas Name="c">
             <Path Stroke="Black" StrokeThickness="2">
                 <Path.Data>
                     <LineGeometry StartPoint="10 10" EndPoint="200,150"/>

@@ -55,3 +55,4 @@ C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\thickness3
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\thickness5.png
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\thickness7.png
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\thicknesses.png
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\brush.png

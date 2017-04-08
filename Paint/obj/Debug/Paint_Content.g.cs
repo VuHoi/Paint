@@ -8,6 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/brush.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/capture.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/color-picker.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/hexagon.png")]
