@@ -13,20 +13,36 @@ using System.Windows.Input;
 using System.Windows.Shapes;
 using System.Windows.Media;
 using Microsoft.Windows.Controls.Ribbon;
+using System.Drawing;
+using System.Windows.Media.Imaging;
+using System.IO;
 
 namespace Paint.ViewModel
 {
-   public class MainWindowViewModel:ViewModelBase
+
+    enum DrawType { pencil, brush, line, ellipse, rectangle, triangle, arrow, heart, fill, erase, text };
+    public class MainWindowViewModel:Control, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void NotifyPropertyChanged(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
         private Line curLine;
-        private Canvas canvas;
-        private Document doc;
+        private Shape curShape;
+        private int Outline = 1;
+        private ContentControl curControl;
+        private bool IsShape = false;
         private bool IsColor1 = true;
+        private bool IsCheckFill=false;
         private bool isCanvas_MouseDown = false;
-        Point CurrentPointDown = new Point();
-        Point CurrentPointMove = new Point();
+        System.Windows.Point CurrentPointDown = new System.Windows.Point();
+        System.Windows.Point CurrentPointMove = new System.Windows.Point();
         private ICommand _Canvas_MouseDown;
-        private Brush _color1=new SolidColorBrush(Colors.Black), _color2=new SolidColorBrush(Colors.White);
+        private System.Windows.Media.Brush _color1 =new SolidColorBrush(Colors.Black), _color2=new SolidColorBrush(Colors.White);
+        private System.Windows.Media.Brush _colorFill;
         private int StrokeThickness = 1;
         private bool isItemMenu = false;
         private ICommand _Canvas_MouseMove;
@@ -40,10 +56,19 @@ namespace Paint.ViewModel
         private ICommand _BrushCommand;
         private ICommand _EraserCommand;
         private ICommand _PenCommand;
+        private ICommand _SmoothCommand;
+        private ICommand _DarkCommand;
+        private ICommand _MixCommand;
+        private ICommand _RectangleCommand;
+        private ICommand _TriangleCommand;
+        private ICommand _ArrowCommand;
+        private ICommand _CircleCommand;
+        private ICommand _HeartCommand;
+        private ICommand _FillCommand;
         public MainWindowViewModel()
         {
-            doc = new Document(canvas);
-            doc.drawType = DrawType.brush;
+            ColorFill = Color1;
+            drawType = DrawType.brush;
         }
         public ICommand Canvas_MouseUp
         {
@@ -62,10 +87,10 @@ namespace Paint.ViewModel
         private void OnCanvas_MouseUp(Canvas canvas)
         {
             isCanvas_MouseDown = false;
-            if (doc.drawType == DrawType.line)
+            if (drawType == DrawType.line)
             {
 
-               Line Line = new Line();
+                Line Line = new Line();
 
                 Line.X1 = CurrentPointDown.X;
                 Line.Y1 = CurrentPointDown.Y;
@@ -74,7 +99,58 @@ namespace Paint.ViewModel
 
                 Line.StrokeThickness = StrokeThickness;
                 Line.Stroke = Color1;
-                canvas.Children.Add(Line);
+                DrawShape(Line, Outline, canvas);
+
+                curLine = null;
+            }
+            else if (drawType == DrawType.ellipse || drawType == DrawType.rectangle || drawType == DrawType.triangle || drawType == DrawType.arrow || drawType == DrawType.heart)
+            {
+                curControl = new ContentControl();
+                Shape temp;
+                if (drawType == DrawType.ellipse)
+                {
+                    temp = new Ellipse();
+                 
+                }
+                else if (drawType == DrawType.rectangle)
+                {
+                    temp = new System.Windows.Shapes.Rectangle();
+                }
+                else if (drawType == DrawType.triangle)
+                {
+                    temp = new Triangle();
+                    ((Triangle)temp).Start = ((Triangle)curShape).Start;
+                    temp.Width = curShape.Width;
+                    temp.Height = curShape.Height;
+                }
+                else if (drawType == DrawType.arrow)
+                {
+                    temp = new Arrow();
+                    ((Arrow)temp).Start = ((Arrow)curShape).Start;
+                    temp.Width = curShape.Width;
+                    temp.Height = curShape.Height;
+                }
+                else
+                {
+                    temp = new Heart();
+                    ((Heart)temp).Start = ((Heart)curShape).Start;
+                    temp.Width = curShape.Width;
+                    temp.Height = curShape.Height;
+                }
+                temp.Stroke = Color1;
+                temp.StrokeThickness = StrokeThickness;
+                temp.IsHitTestVisible = true;
+                if(IsCheckFill)temp.Fill = ColorFill;
+                Canvas.SetLeft(curControl, curShape.Margin.Left);
+                Canvas.SetTop(curControl, curShape.Margin.Top);
+                curControl.Width = curShape.Width;
+                curControl.Height = curShape.Height;
+                curControl.Content = temp;
+                curControl.Background = Color1;
+                DrawShape(curControl, Outline, canvas);
+
+                
+                curShape = null;
             }
         }
 
@@ -98,57 +174,117 @@ namespace Paint.ViewModel
             bool addShape = false;
             if (isCanvas_MouseDown == true)
             {
-                if (doc.drawType == DrawType.brush|| doc.drawType == DrawType.erase|| doc.drawType == DrawType.pencil)
+
+                if ((drawType == DrawType.ellipse || drawType == DrawType.rectangle || drawType == DrawType.triangle || drawType == DrawType.arrow || drawType == DrawType.heart) && IsShape)
                 {
-                    Line line = new Line();
-                    line.Stroke = Color1;
 
-                    if (doc.drawType == DrawType.erase)
+                    if (curShape == null)
                     {
-                        line.Stroke = Color2;
-                        StrokeThickness = 15;
-                    }
-                    else if (doc.drawType == DrawType.brush && !isItemMenu)
-                    {
-                        StrokeThickness = 3;
-                    }
-                    else if(!isItemMenu)
-                        StrokeThickness = 1;
-                        line.StrokeThickness = StrokeThickness;
-                        
-                    
-                    line.X1 = CurrentPointDown.X;
-                    line.Y1 = CurrentPointDown.Y;
-                    line.X2 = Mouse.GetPosition(canvas).X;
-                    line.Y2 = Mouse.GetPosition(canvas).Y;
-                  
 
-                    CurrentPointDown = Mouse.GetPosition(canvas);
+                        if (drawType == DrawType.ellipse)
+                        {
+                            curShape = new Ellipse();
+                        }
+                        else if (drawType == DrawType.rectangle)
+                        {
+                            curShape = new System.Windows.Shapes.Rectangle();
+                        }
+                        else if (drawType == DrawType.triangle)
+                        {
 
-                    canvas.Children.Add(line);
-                }
-                else if(doc.drawType==DrawType.line)
-                {
-                    if (curLine == null)
-                    {
-                        curLine = new Line();
+                            curShape = new Triangle();
+                            ((Triangle)curShape).Start = CurrentPointDown;
+                        }
+                        else if (drawType == DrawType.arrow)
+                        {
+
+                            curShape = new Arrow();
+                            ((Arrow)curShape).Start = CurrentPointDown;
+                        }
+                        else
+                        {
+                            curShape = new Heart();
+                            ((Heart)curShape).Start = CurrentPointDown;
+                        }
                         addShape = true;
+                        curShape.StrokeThickness = StrokeThickness;
+                        curShape.Stroke = Color1;
                     }
-                    curLine.X1 = CurrentPointDown.X;
-                    curLine.Y1 = CurrentPointDown.Y;
-                    curLine.X2 = CurrentPointMove.X;
-                    curLine.Y2 = CurrentPointMove.Y;
-                    
-                    curLine.StrokeThickness = StrokeThickness;
-                    curLine.Stroke = Color1;
-                    double[] dashes = { 2, 2 };
-                    curLine.StrokeDashArray = new System.Windows.Media.DoubleCollection(dashes);
-                    if (addShape)
+
+                    if (CurrentPointMove.X <= CurrentPointDown.X && CurrentPointMove.Y <= CurrentPointDown.Y)  //Góc phần tư thứ nhất
                     {
-                        canvas.Children.Add(curLine);
+                        curShape.Margin = new Thickness(CurrentPointMove.X, CurrentPointMove.Y, 0, 0);
+                    }
+                    else if (CurrentPointMove.X >= CurrentPointDown.X && CurrentPointMove.Y <= CurrentPointDown.Y)
+                    {
+                        curShape.Margin = new Thickness(CurrentPointDown.X, CurrentPointMove.Y, 0, 0);
+                    }
+                    else if (CurrentPointMove.X >= CurrentPointDown.X && CurrentPointMove.Y >= CurrentPointDown.Y)
+                    {
+                        curShape.Margin = new Thickness(CurrentPointDown.X, CurrentPointDown.Y, 0, 0);
+                    }
+                    else if (CurrentPointMove.X <= CurrentPointDown.X && CurrentPointMove.Y >= CurrentPointDown.Y)
+                    {
+                        curShape.Margin = new Thickness(CurrentPointDown.X, CurrentPointDown.Y, 0, 0);
+                    }
+                    if (IsCheckFill) curShape.Fill = ColorFill;
+                    curShape.Width = Math.Abs(CurrentPointMove.X - CurrentPointDown.X);
+                    curShape.Height = Math.Abs(CurrentPointMove.Y - CurrentPointDown.Y);
+                    
+                  
+                    if(addShape)
+                    DrawCapture(curShape, canvas);
+                }else
+                    if (drawType == DrawType.brush || drawType == DrawType.erase || drawType == DrawType.pencil)
+                    {
+                        Line line = new Line();
+                        line.Stroke = Color1;
+
+                        if (drawType == DrawType.erase)
+                        {
+                            line.Stroke = Color2;
+                            StrokeThickness = 15;
+                        }
+                        else if (drawType == DrawType.brush && !isItemMenu)
+                        {
+                            StrokeThickness = 3;
+                        }
+                        else if (!isItemMenu)
+                            StrokeThickness = 1;
+                        line.StrokeThickness = StrokeThickness;
+                        line.X1 = CurrentPointDown.X;
+                        line.Y1 = CurrentPointDown.Y;
+                        line.X2 = Mouse.GetPosition(canvas).X;
+                        line.Y2 = Mouse.GetPosition(canvas).Y;
+
+
+                        CurrentPointDown = Mouse.GetPosition(canvas);
+                        canvas.Children.Add(line);
+
+
+                    }
+                    else if (drawType == DrawType.line)
+                    {
+                        if (curLine == null)
+                        {
+                            curLine = new Line();
+                            addShape = true;
+                        }
+                        curLine.X1 = CurrentPointDown.X;
+                        curLine.Y1 = CurrentPointDown.Y;
+                        curLine.X2 = CurrentPointMove.X;
+                        curLine.Y2 = CurrentPointMove.Y;
+
+                        curLine.StrokeThickness = StrokeThickness;
+                        curLine.Stroke = Color1;
+
+                        if (addShape)
+                        {
+                            DrawCapture(curLine, canvas);
+                        }
                     }
                 }
-            }
+            
         }
         public ICommand Canvas_MouseDown
         {
@@ -171,7 +307,7 @@ namespace Paint.ViewModel
                 
             
         }
-        public Brush Color1
+        public System.Windows.Media.Brush Color1
         {
             get
             {
@@ -184,7 +320,7 @@ namespace Paint.ViewModel
             }
         }
 
-        public Brush Color2
+        public System.Windows.Media.Brush Color2
         {
             get
             {
@@ -271,7 +407,7 @@ namespace Paint.ViewModel
         {
             get
             {
-                _LineCommand = new RelayCommand<object>((p) => true, OnLineCommand);
+                _LineCommand = new RelayCommand<Canvas>((p) => true, OnLineCommand);
                 return _LineCommand;
             }
 
@@ -285,7 +421,7 @@ namespace Paint.ViewModel
         {
             get
             {
-                _BrushCommand = new RelayCommand<object>((p) => true, OnBrushCommand);
+                _BrushCommand = new RelayCommand<Canvas>((p) => true, OnBrushCommand);
                 return _BrushCommand;
             }
 
@@ -299,7 +435,7 @@ namespace Paint.ViewModel
         {
             get
             {
-                _EraserCommand = new RelayCommand<object>((p) => true, OnEraserCommand);
+                _EraserCommand = new RelayCommand<Canvas>((p) => true, OnEraserCommand);
                 return _EraserCommand;
             }
 
@@ -313,7 +449,7 @@ namespace Paint.ViewModel
         {
             get
             {
-                _PenCommand = new RelayCommand<object>((p) => true, OnPenCommand);
+                _PenCommand = new RelayCommand<Canvas>((p) => true, OnPenCommand);
                 return _PenCommand;
             }
 
@@ -322,29 +458,240 @@ namespace Paint.ViewModel
                 _PenCommand = value;
             }
         }
-
-        private void OnPenCommand(object obj)
+        
+        public Canvas Canvas
         {
-            isItemMenu = false;
-            doc.drawType = DrawType.pencil;
+            get { return (Canvas)GetValue(MainWindowViewModel.CanvasProperty); }
+            set { SetValue(MainWindowViewModel.CanvasProperty, value); }
         }
 
-        private void OnEraserCommand(object obj)
+        public ICommand SmoothCommand
         {
-            isItemMenu = false;
-            doc.drawType = DrawType.erase;
+            get
+            {
+                _SmoothCommand = new RelayCommand<object>((p) => true, OnSmoothCommand);
+                return _SmoothCommand;
+            }
+
+            set
+            {
+                _SmoothCommand = value;
+            }
         }
 
-        private void OnBrushCommand(object obj)
+        private void OnSmoothCommand(object obj)
         {
-            isItemMenu = false;
-            doc.drawType = DrawType.brush;
+            Outline = 1;
         }
 
-        private void OnLineCommand(object obj)
+        public ICommand DarkCommand
+        {
+            get
+            {
+                _DarkCommand = new RelayCommand<object>((p) => true, OnDarkCommand);
+                return _DarkCommand;
+            }
+
+            set
+            {
+                _DarkCommand = value;
+            }
+        }
+
+        private void OnDarkCommand(object obj)
+        {
+            Outline = 2;
+        }
+
+        public ICommand MixCommand
+        {
+            get
+            {
+                _MixCommand = new RelayCommand<object>((p) => true, OnMixCommand);
+                return _MixCommand;
+            }
+
+            set
+            {
+                _MixCommand = value;
+            }
+        }
+
+        public ICommand RectangleCommand
+        {
+            get
+            {
+                _RectangleCommand = new RelayCommand<Canvas>((p) => true, OnRectangleCommand);
+                return _RectangleCommand;
+            }
+
+            set
+            {
+                _RectangleCommand = value;
+            }
+        }
+
+        public ICommand TriangleCommand
+        {
+            get
+            {
+                _TriangleCommand = new RelayCommand<Canvas>((p) => true, OnTriangleCommand);
+                return _TriangleCommand;
+            }
+
+            set
+            {
+                _TriangleCommand = value;
+            }
+        }
+
+        public ICommand ArrowCommand
+        {
+            get
+            {
+                _ArrowCommand = new RelayCommand<Canvas>((p) => true, OnArrowCommand);
+                return _ArrowCommand;
+            }
+
+            set
+            {
+                _ArrowCommand = value;
+            }
+        }
+
+        public ICommand CircleCommand
+        {
+            get
+            {
+                _CircleCommand = new RelayCommand<Canvas>((p) => true, OnCircleCommand);
+                return _CircleCommand;
+            }
+
+            set
+            {
+                _CircleCommand = value;
+            }
+        }
+
+        public ICommand HeartCommand
+        {
+            get
+            {
+                _HeartCommand = new RelayCommand<Canvas>((p) => true, OnHeartCommand);
+                return _HeartCommand;
+            }
+
+            set
+            {
+                _HeartCommand = value;
+            }
+        }
+
+        public System.Windows.Media.Brush ColorFill
+        {
+            get
+            {
+                return _colorFill;
+            }
+            set
+            {
+                _colorFill = value;NotifyPropertyChanged("ColorFill");
+            }
+        }
+
+        public ICommand FillCommand
+        {
+            get
+            {
+                _FillCommand = new RelayCommand<RibbonCheckBox>((p) => true, OnFillCommand);
+                return _FillCommand;
+            }
+
+            set
+            {
+                _FillCommand = value;
+            }
+        }
+
+        private void OnFillCommand(RibbonCheckBox cbk)
+        {
+            if (cbk.IsChecked == true)
+            {
+                IsCheckFill = true;
+            }
+            else IsCheckFill=false;
+        }
+
+        private void OnHeartCommand(Canvas obj)
+        {
+            drawType = DrawType.heart;
+            obj.Cursor = Cursors.Cross;
+            IsShape = true;
+        }
+
+        private void OnCircleCommand(Canvas obj)
+        {
+            drawType = DrawType.ellipse;
+            obj.Cursor = Cursors.Cross;
+            IsShape = true;
+        }
+
+        private void OnArrowCommand(Canvas obj)
+        {
+            drawType = DrawType.arrow;
+            obj.Cursor = Cursors.Cross;
+            IsShape = true;
+        }
+
+        private void OnTriangleCommand(Canvas obj)
+        {
+            drawType = DrawType.triangle;
+            obj.Cursor = Cursors.Cross;
+            IsShape = true;
+        }
+
+        private void OnRectangleCommand(Canvas obj)
+        {
+            drawType = DrawType.rectangle;
+            obj.Cursor = Cursors.Cross;
+            IsShape = true;
+        }
+
+        private void OnMixCommand(object obj)
+        {
+            Outline = 3;
+        }
+
+        public static readonly DependencyProperty CanvasProperty =
+            DependencyProperty.Register("Canvas", typeof(Canvas), typeof(MainWindowViewModel));
+
+
+        private void OnPenCommand(Canvas obj)
         {
             isItemMenu = false;
-            doc.drawType = DrawType.line;
+            drawType = DrawType.pencil;
+            obj.Cursor= Cursors.Pen;
+        }
+
+        private void OnEraserCommand(Canvas obj)
+        {
+            isItemMenu = false;
+            drawType = DrawType.erase;
+            obj.Cursor = Cursors.Arrow;
+        }
+
+        private void OnBrushCommand(Canvas obj)
+        {
+            isItemMenu = false;
+            drawType = DrawType.brush;
+            obj.Cursor = Cursors.Pen;
+        }
+
+        private void OnLineCommand(Canvas obj)
+        {
+            isItemMenu = false;
+            drawType = DrawType.line;
+            obj.Cursor = Cursors.Cross;
         }
 
         private void OnColorCommand(RibbonButton canvas)
@@ -352,7 +699,7 @@ namespace Paint.ViewModel
             System.Windows.Forms.ColorDialog dlg = new System.Windows.Forms.ColorDialog();
             dlg.AllowFullOpen = true;
             dlg.ShowDialog();
-            Color color = new Color();
+            System.Windows.Media.Color color = new System.Windows.Media.Color();
             color.A = dlg.Color.A;
             color.R = dlg.Color.R;
             color.G = dlg.Color.G;
@@ -360,7 +707,7 @@ namespace Paint.ViewModel
             if (IsColor1)
                 Color1 = new SolidColorBrush(color);
             else Color2 = new SolidColorBrush(color);
-
+            
 
         }
 
@@ -378,12 +725,14 @@ namespace Paint.ViewModel
         {
            if(IsColor1)
             {
-                Color1 = (Brush)(canvas.Background);
+                Color1 = canvas.Background;
             }
            else
             {
-                Color2 = (Brush)(canvas.Background);
+                Color2 = canvas.Background;
             }
+            if (IsCheckFill) ColorFill = Color1;
+            else ColorFill = Color2;
         }
 
         private void OnStrokeThicknessCommand(RibbonMenuItem canvas)
@@ -407,6 +756,96 @@ namespace Paint.ViewModel
             }
         }
 
-        
+        private DrawType drawType;
+       
+        public void DrawCapture(Shape shape,Canvas canvas)
+        {
+            double[] dashes = { 2, 2 };
+            shape.StrokeDashArray = new System.Windows.Media.DoubleCollection(dashes);
+            canvas.Children.Add(shape);
+        }
+        public void DrawShape(ContentControl control, int outline, Canvas canvas)
+        {
+            canvas.Children.RemoveAt(canvas.Children.Count - 1);
+            RefreshCanvas(canvas);
+            if (outline == 1)
+            {
+                ((Shape)control.Content).StrokeDashArray = null;
+            }
+            else if (outline == 2)
+            {
+                double[] dashes = { 4, 4 };
+                ((Shape)control.Content).StrokeDashArray = new System.Windows.Media.DoubleCollection(dashes);
+            }
+            else
+            {
+                double[] dashes = { 4, 1, 4, 1 };
+                ((Shape)control.Content).StrokeDashArray = new System.Windows.Media.DoubleCollection(dashes);
+            }
+
+            canvas.Children.Add(control);
+
+        }
+
+        public void RefreshCanvas( Canvas canvas)
+        {
+            System.Windows.Controls.Image img = new System.Windows.Controls.Image();
+            img.Width = canvas.ActualWidth;
+            img.Height = canvas.ActualHeight;
+            img.Source = BitmapToImageSource(CanvasToBitmap(canvas));
+            canvas.Children.Clear();
+            canvas.Children.Add(img);
+        }
+        private ImageSource BitmapToImageSource(Bitmap bm)
+        {
+            System.Windows.Media.Imaging.BitmapSource b = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(bm.GetHbitmap(), IntPtr.Zero, System.Windows.Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(bm.Width, bm.Height));
+            return b;
+        }
+
+        public Bitmap CanvasToBitmap(Canvas cv)
+        {
+            Bitmap bm;
+            Rect bounds = VisualTreeHelper.GetDescendantBounds(cv);
+            double dpi = 96d;
+            RenderTargetBitmap renderBitmap = new RenderTargetBitmap((int)bounds.Width, (int)bounds.Height, dpi, dpi, System.Windows.Media.PixelFormats.Default);
+
+
+            DrawingVisual dv = new DrawingVisual();
+            using (DrawingContext dc = dv.RenderOpen())
+            {
+                VisualBrush vb = new VisualBrush(cv);
+                dc.DrawRectangle(vb, null, new Rect(new System.Windows.Point(), bounds.Size));
+            }
+            renderBitmap.Render(dv);
+
+            MemoryStream stream = new MemoryStream();
+            BitmapEncoder encoder = new BmpBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
+            encoder.Save(stream);
+            bm = new System.Drawing.Bitmap(stream);
+            return bm;
+        }
+
+        public void DrawShape(Shape shape, int outline,Canvas canvas)
+        {
+            RefreshCanvas(canvas);
+            if (outline == 1)
+            {
+                shape.StrokeDashArray = null;
+            }
+            else if (outline == 2)
+            {
+                double[] dashes = { 4, 4 };
+                shape.StrokeDashArray = new System.Windows.Media.DoubleCollection(dashes);
+            }
+            else
+            {
+                double[] dashes = { 4, 1, 4, 1 };
+                shape.StrokeDashArray = new System.Windows.Media.DoubleCollection(dashes);
+            }
+
+            canvas.Children.Add(shape);
+
+        }
     }
 }

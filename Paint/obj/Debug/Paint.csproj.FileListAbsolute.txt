@@ -56,3 +56,9 @@ C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\thickness5
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\thickness7.png
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\thicknesses.png
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\brush.png
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\dark.png
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\mix.png
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\smooth.png
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\arrow.png
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\heart.png
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\fill.png
