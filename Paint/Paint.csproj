@@ -136,6 +136,9 @@
     <Content Include="Resources\dark.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\Diy Paint Bucket.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\fill.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

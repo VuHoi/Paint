@@ -68,6 +68,9 @@
                     <r:RibbonButton SmallImageSource="Resources/resize.png" Width="70" Label="Resize" KeyTip="C" />
                     <r:RibbonButton SmallImageSource="Resources/rotate.png" Width="70" Label="Rotate" KeyTip="C" />
                 </r:RibbonGroup>
+                <r:RibbonGroup>
+                    <r:RibbonButton  LargeImageSource="Resources/Diy Paint Bucket.ico" Command="{Binding BucketCommand}" CommandParameter="{Binding ElementName=Canvas}" Label="Bucket"></r:RibbonButton>
+                </r:RibbonGroup>
                 <r:RibbonGroup  Header="Tool">
                     <r:RibbonButton Command="{Binding BrushCommand}" CommandParameter="{Binding ElementName=Canvas}" LargeImageSource="Resources/brush.png" Width="70" Label="Brush" KeyTip="X" />
                     <r:RibbonButton Command="{Binding PenCommand}" CommandParameter="{Binding ElementName=Canvas}" SmallImageSource="Resources/pen.png" Width="70" Label="Pen" KeyTip="X" />
