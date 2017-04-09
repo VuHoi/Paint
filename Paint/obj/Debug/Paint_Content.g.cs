@@ -8,11 +8,17 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/arrow.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/brush.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/capture.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/color-picker.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/dark.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/fill.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/heart.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/hexagon.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/mix.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/rectangle.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/smooth.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/star.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/thickness1.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/thickness3.png")]

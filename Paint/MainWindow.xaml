@@ -10,8 +10,11 @@
         Title="MainWindow" Height="350" Width="525"
         
         xmlns:ViewModel="clr-namespace:Paint.ViewModel">
+    <!--Canvas="{Binding DataContext.Canvas,ElementName=Canvas}"-->
     <Window.Resources>
-        <ViewModel:MainWindowViewModel x:Key="KeyMainWindowVIewModel"></ViewModel:MainWindowViewModel>
+        <ViewModel:MainWindowViewModel  Canvas="{Binding DataContext.Canvas,ElementName=Canvas}"
+          x:Key="KeyMainWindowVIewModel">
+        </ViewModel:MainWindowViewModel>
     </Window.Resources>
     <Grid DataContext="{StaticResource KeyMainWindowVIewModel}">
         
@@ -66,18 +69,19 @@
                     <r:RibbonButton SmallImageSource="Resources/rotate.png" Width="70" Label="Rotate" KeyTip="C" />
                 </r:RibbonGroup>
                 <r:RibbonGroup  Header="Tool">
-                    <r:RibbonButton Command="{Binding BrushCommand}" LargeImageSource="Resources/brush.png" Width="70" Label="Brush" KeyTip="X" />
-                    <r:RibbonButton Command="{Binding PenCommand}" SmallImageSource="Resources/pen.png" Width="70" Label="Pen" KeyTip="X" />
+                    <r:RibbonButton Command="{Binding BrushCommand}" CommandParameter="{Binding ElementName=Canvas}" LargeImageSource="Resources/brush.png" Width="70" Label="Brush" KeyTip="X" />
+                    <r:RibbonButton Command="{Binding PenCommand}" CommandParameter="{Binding ElementName=Canvas}" SmallImageSource="Resources/pen.png" Width="70" Label="Pen" KeyTip="X" />
                     <r:RibbonButton SmallImageSource="Resources/text.png" Width="70" Label="Text" KeyTip="C" />
-                    <r:RibbonButton Command="{Binding EraserCommand}" SmallImageSource="Resources/eraser.png" Width="70" Label="Eraser" KeyTip="C" />
+                    <r:RibbonButton Command="{Binding EraserCommand}" CommandParameter="{Binding ElementName=Canvas}" SmallImageSource="Resources/eraser.png" Width="70" Label="Eraser" KeyTip="C" />
                 </r:RibbonGroup>
-                <r:RibbonGroup Width="100" Header="Shapes">
-                    <r:RibbonButton Command="{Binding LineCommand}"  Height="30"  Width="30" SmallImageSource="Resources/line.png"   KeyTip="X" />
-                    <r:RibbonButton Height="30"  Width="30" SmallImageSource="Resources/circle.png"   KeyTip="C" />
-                    <r:RibbonButton Height="30"  Width="30" SmallImageSource="Resources/hexagon.png"   KeyTip="C" />
-                    <r:RibbonButton  Height="30"  Width="30" SmallImageSource="Resources/rectangle.png"   KeyTip="X" />
-                    <r:RibbonButton Height="30"  Width="30" SmallImageSource="Resources/tritangle.png"   KeyTip="C" />
-                    <r:RibbonButton Height="30"  Width="30" SmallImageSource="Resources/star.png"   KeyTip="C" />
+                <r:RibbonGroup  Header="Shapes">
+                    <r:RibbonButton Margin="5,0,0,0" Command="{Binding LineCommand}" CommandParameter="{Binding ElementName=Canvas}" Height="30"  SmallImageSource="Resources/line.png"   KeyTip="X" />
+                    <r:RibbonButton Margin="5,0,0,0" Command="{Binding CircleCommand}" CommandParameter="{Binding ElementName=Canvas}" Height="30"   SmallImageSource="Resources/circle.png"   KeyTip="C" />
+                    <r:RibbonButton Command="{Binding HeartCommand}" CommandParameter="{Binding ElementName=Canvas}" Height="30" Margin="5,0,0,0"  SmallImageSource="Resources/Heart.png"   KeyTip="C" />
+                    <r:RibbonButton  Height="30" Margin="5,0,0,0"  Command="{Binding RectangleCommand}" CommandParameter="{Binding ElementName=Canvas}" SmallImageSource="Resources/rectangle.png"   KeyTip="X" />
+                    <r:RibbonButton Margin="5,0,0,0" Command="{Binding TriangleCommand}" CommandParameter="{Binding ElementName=Canvas}" Height="30"   SmallImageSource="Resources/tritangle.png"   KeyTip="C" />
+                    <r:RibbonButton Margin="5,0,0,0" Command="{Binding ArrowCommand}" CommandParameter="{Binding ElementName=Canvas}" Height="30"   SmallImageSource="Resources/arrow.png"   KeyTip="C" />
+                    <r:RibbonCheckBox Command="{Binding FillCommand}" CommandParameter="{Binding ElementName=ckbFill}" Name="ckbFill"  Label="Fill" LargeImageSource="Resources/fill.png"></r:RibbonCheckBox>
                 </r:RibbonGroup>
                 <r:RibbonGroup>
                     <r:RibbonMenuButton  Name="cmbSize" LargeImageSource="Resources/thicknesses.png" Label="Size">
@@ -89,9 +93,9 @@
                     </r:RibbonMenuButton>
                 </r:RibbonGroup >
                 <r:RibbonGroup Header="Outline">
-                    <r:RibbonRadioButton SmallImageSource="Resources/star.png" Label="Smooth"></r:RibbonRadioButton>
-                    <r:RibbonRadioButton Label="Dark"></r:RibbonRadioButton>
-                    <r:RibbonRadioButton Label="Mix"></r:RibbonRadioButton>
+                    <r:RibbonRadioButton Command="{Binding SmoothCommand}" Width="80" SmallImageSource="Resources/smooth.png" Label="Smooth"></r:RibbonRadioButton>
+                    <r:RibbonRadioButton Command="{Binding DarkCommand}" Width="80" SmallImageSource="Resources/dark.png" Label="Dark"></r:RibbonRadioButton>
+                    <r:RibbonRadioButton Command="{Binding MixCommand}" Width="80" SmallImageSource="Resources/mix.png" Label="Mix"></r:RibbonRadioButton>
                 </r:RibbonGroup>
                 <r:RibbonGroup 
                                Header="Color">

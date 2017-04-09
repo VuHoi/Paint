@@ -18,8 +18,19 @@
                     <PathGeometry>
                         <PathFigure StartPoint="10,50">
                             <LineSegment Point="200,70" />
+                            <LineSegment Point="500,150" />
+                            <LineSegment Point="10,50" />
                         </PathFigure>
                     </PathGeometry>
+                </Path.Data>
+            </Path>
+            <Path Stroke="Black" StrokeThickness="2" Fill="blue">
+                <Path.Data>
+                    <GeometryGroup FillRule="Nonzero">
+                        <EllipseGeometry Center="110 60" RadiusX="50" RadiusY="50" />
+                        <EllipseGeometry Center="80 110" RadiusX="50" RadiusY="50" />
+                        <EllipseGeometry Center="140 110" RadiusX="50" RadiusY="50" />
+                    </GeometryGroup>
                 </Path.Data>
             </Path>
         </Canvas>
