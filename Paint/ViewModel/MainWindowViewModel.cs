@@ -20,7 +20,7 @@ using System.IO;
 namespace Paint.ViewModel
 {
 
-    enum DrawType { pencil, brush, line, ellipse, rectangle, triangle, arrow, heart, fill, erase, text };
+    enum DrawType { pencil, brush, line, ellipse, rectangle, triangle, arrow, heart, fill, erase, text,bucket };
     public class MainWindowViewModel:Control, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -65,6 +65,7 @@ namespace Paint.ViewModel
         private ICommand _CircleCommand;
         private ICommand _HeartCommand;
         private ICommand _FillCommand;
+        private ICommand _BucketCommand;
         public MainWindowViewModel()
         {
             ColorFill = Color1;
@@ -151,6 +152,17 @@ namespace Paint.ViewModel
 
                 
                 curShape = null;
+            }
+            else if(drawType==DrawType.bucket)
+            {
+                System.Drawing.Color color = new System.Drawing.Color();
+                color = System.Drawing.Color.FromArgb(((System.Windows.Media.Color)(ColorFill.GetValue(SolidColorBrush.ColorProperty))).A,
+                    ((System.Windows.Media.Color)(ColorFill.GetValue(SolidColorBrush.ColorProperty))).R,
+                    ((System.Windows.Media.Color)(ColorFill.GetValue(SolidColorBrush.ColorProperty))).G,
+                    ((System.Windows.Media.Color)(ColorFill.GetValue(SolidColorBrush.ColorProperty))).B);
+                Bitmap bm = CanvasToBitmap(canvas);
+                FloodFill(bm, new System.Drawing.Point((int)Mouse.GetPosition(canvas).X, (int)Mouse.GetPosition(canvas).Y), color, canvas);
+
             }
         }
 
@@ -613,6 +625,26 @@ namespace Paint.ViewModel
             }
         }
 
+        public ICommand BucketCommand
+        {
+            get
+            {
+                _BucketCommand = new RelayCommand<Canvas>((p) => true, OnBucketCommand);
+                return _BucketCommand;
+            }
+
+            set
+            {
+                _BucketCommand = value;
+            }
+        }
+
+        private void OnBucketCommand(Canvas canvas)
+        {
+            drawType = DrawType.bucket;
+            canvas.Cursor = Cursors.Arrow;
+        }
+
         private void OnFillCommand(RibbonCheckBox cbk)
         {
             if (cbk.IsChecked == true)
@@ -707,7 +739,8 @@ namespace Paint.ViewModel
             if (IsColor1)
                 Color1 = new SolidColorBrush(color);
             else Color2 = new SolidColorBrush(color);
-            
+            if (IsCheckFill) ColorFill = Color1;
+            else ColorFill = Color2;
 
         }
 
@@ -846,6 +879,47 @@ namespace Paint.ViewModel
 
             canvas.Children.Add(shape);
 
+        }
+        private bool SameColor(System.Drawing.Color c1, System.Drawing.Color c2)
+        {
+            return ((c1.A == c2.A) && (c1.B == c2.B) && (c1.G == c2.G) && (c1.R == c2.R));
+        }
+        public void FloodFill(System.Drawing.Bitmap bm, System.Drawing.Point p, System.Drawing.Color Color,Canvas canvas)
+        {
+            Stack<System.Drawing.Point> S = new Stack<System.Drawing.Point>();
+            System.Drawing.Color OriColor = bm.GetPixel(p.X, p.Y);
+            bm.SetPixel(p.X, p.Y, Color);
+            S.Push(p);
+            while (S.Count != 0)
+            {
+                p = S.Pop();
+                if ((p.X - 1 >= 0) && SameColor(OriColor, bm.GetPixel(p.X - 1, p.Y)))
+                {
+                    bm.SetPixel(p.X - 1, p.Y, Color);
+                    S.Push(new System.Drawing.Point(p.X - 1, p.Y));
+                }
+                if ((p.X + 1 < bm.Width) && SameColor(OriColor, bm.GetPixel(p.X + 1, p.Y)))
+                {
+                    bm.SetPixel(p.X + 1, p.Y, Color);
+                    S.Push(new System.Drawing.Point(p.X + 1, p.Y));
+                }
+                if ((p.Y - 1 >= 0) && SameColor(OriColor, bm.GetPixel(p.X, p.Y - 1)))
+                {
+                    bm.SetPixel(p.X, p.Y - 1, Color);
+                    S.Push(new System.Drawing.Point(p.X, p.Y - 1));
+                }
+                if ((p.Y + 1 < bm.Height) && SameColor(OriColor, bm.GetPixel(p.X, p.Y + 1)))
+                {
+                    bm.SetPixel(p.X, p.Y + 1, Color);
+                    S.Push(new System.Drawing.Point(p.X, p.Y + 1));
+                }
+            }
+            System.Windows.Controls.Image img = new System.Windows.Controls.Image();
+            img.Width = canvas.ActualWidth;
+            img.Height = canvas.ActualHeight;
+            img.Source = BitmapToImageSource(bm);
+            canvas.Children.Clear();
+            canvas.Children.Add(img);
         }
     }
 }

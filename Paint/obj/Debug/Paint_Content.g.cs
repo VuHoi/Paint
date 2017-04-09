@@ -13,6 +13,7 @@
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/capture.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/color-picker.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/dark.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/diy%20paint%20bucket.ico")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/fill.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/heart.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/hexagon.png")]
