@@ -33,7 +33,7 @@ namespace Paint.ViewModel
         private Line curLine;
         private Shape curShape;
         private int Outline = 1;
-        private int STT = 0;
+        private int STT = 0, NumberUndo = 1, NumberRedo = 1;
         private string CurrentPath=null;
         private int Isdelete = 0;
         private ContentControl curControl;
@@ -47,6 +47,7 @@ namespace Paint.ViewModel
         private System.Windows.Media.Brush _color1 = new SolidColorBrush(Colors.Black), _color2 = new SolidColorBrush(Colors.White);
         private System.Windows.Media.Brush _colorFill;
         private int StrokeThickness = 1;
+        private int one = 1,two=2,three=3;
         private bool isItemMenu = false;
         private List<System.Windows.Controls.Image> StkShape = new List<System.Windows.Controls.Image>();
         private ICommand _Canvas_MouseMove;
@@ -76,6 +77,10 @@ namespace Paint.ViewModel
         private ICommand _SaveFileCommand;
         private ICommand _NewFileCommand;
         private ICommand _ExitCommand;
+        private ICommand _UndoNumberCommand;
+        private ICommand _RedoNumberCommand;
+        private ICommand _TextCommand;
+
         public MainWindowViewModel()
         {
             ColorFill = Color1;
@@ -88,7 +93,6 @@ namespace Paint.ViewModel
                 _Canvas_MouseUp = new RelayCommand<Canvas>((p) => true, OnCanvas_MouseUp);
                 return _Canvas_MouseUp;
             }
-
             set
             {
                 _Canvas_MouseUp = value;
@@ -322,6 +326,10 @@ namespace Paint.ViewModel
                     {
                         DrawCapture(curLine, canvas);
                     }
+                }
+                if(drawType==DrawType.text)
+                {
+
                 }
             }
 
@@ -753,6 +761,102 @@ namespace Paint.ViewModel
             }
         }
 
+        public ICommand UndoNumberCommand
+        {
+            get
+            {
+                _UndoNumberCommand = new RelayCommand<int>((p) =>  OnUndoNumberCommand(p));
+                return _UndoNumberCommand;
+            }
+
+            set
+            {
+                _UndoNumberCommand = value;
+            }
+        }
+
+        public ICommand RedoNumberCommand
+        {
+            get
+            {
+                _RedoNumberCommand=new RelayCommand<int>((p)=>OnRedoNumberCommand(p));
+                return _RedoNumberCommand;
+            }
+
+            set
+            {
+                _RedoNumberCommand = value;
+            }
+        }
+
+        public int One
+        {
+            get
+            {
+                return one;
+            }
+
+            set
+            {
+                one = value;
+            }
+        }
+
+        public int Two
+        {
+            get
+            {
+                return two;
+            }
+
+            set
+            {
+                two = value;
+            }
+        }
+
+        public int Three
+        {
+            get
+            {
+                return three;
+            }
+
+            set
+            {
+                three = value;
+            }
+        }
+
+        public ICommand TextCommand
+        {
+            get
+            {
+                _TextCommand = new RelayCommand<Canvas>((p) => true, OnTextCommand);
+                return _TextCommand;
+            }
+
+            set
+            {
+                _TextCommand = value;
+            }
+        }
+
+        private void OnTextCommand(Canvas canvas)
+        {
+            drawType = DrawType.text;
+        }
+
+        private void OnRedoNumberCommand(int numberRedo)
+        {
+            NumberRedo = numberRedo;
+        }
+
+        private void OnUndoNumberCommand(int numberUndo)
+        {
+            NumberUndo = numberUndo;
+        }
+
         private void OnExitCommand(Canvas canvas)
         {
             if(CurrentPath==null&&canvas.Children.Count==0)
@@ -885,9 +989,9 @@ namespace Paint.ViewModel
         private void OnRedoCommand(Canvas canvas)
         {
 
-            if (STT < StkShape.Count)
+            if (STT+NumberRedo-1 < StkShape.Count)
             {
-                STT++;
+                STT+=NumberRedo;
                 canvas.Children.Clear();
                 canvas.Children.Add(StkShape[STT - 1]);
             }
@@ -896,18 +1000,18 @@ namespace Paint.ViewModel
 
         private void OnUndoCommand(Canvas canvas)
         {
-            if(STT==StkShape.Count&& Isdelete==0)
+            if (STT == StkShape.Count && Isdelete == 0)
             {
                 canvas.Children.Remove(curControl);
                 Isdelete = 1;
-              
             }
-           else if (STT - 1 > 0 && Isdelete==1)
+            else if (STT - NumberUndo > 0 && Isdelete == 1)
             {
-                STT--;
+                STT -= NumberUndo;
                 canvas.Children.Clear();
-                canvas.Children.Add(StkShape[STT - 1]);
-            } else if(STT-1==0)
+                canvas.Children.Add(StkShape[STT - NumberUndo]);
+            }
+            else if (STT - NumberUndo <= 0)
             {
                 System.Windows.Controls.Image img = new System.Windows.Controls.Image();
                 img.Width = canvas.ActualWidth;
