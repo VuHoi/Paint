@@ -30,12 +30,12 @@
             <r:Ribbon.QuickAccessToolBar>
                 <r:RibbonQuickAccessToolBar>
                     <r:RibbonButton Margin="50,0,0,0" Height="20" SmallImageSource="Resources/save.png"></r:RibbonButton>
-                    <r:RibbonSplitButton   Height="20" SmallImageSource="Resources/edit_undo.png">
+                    <r:RibbonSplitButton  Command="{Binding UndoCommand}" CommandParameter="{Binding ElementName=Canvas}" Height="20" SmallImageSource="Resources/edit_undo.png">
                         <r:RibbonSplitMenuItem Header="Undo 1" />
                         <r:RibbonSplitMenuItem Header="Undo 2" />
                         <r:RibbonSplitMenuItem Header="Undo 3" />
                     </r:RibbonSplitButton>
-                    <r:RibbonSplitButton   Height="20" SmallImageSource="Resources/edit_redo.png">
+                    <r:RibbonSplitButton Command="{Binding RedoCommand}" CommandParameter="{Binding ElementName=Canvas}"  Height="20" SmallImageSource="Resources/edit_redo.png">
                         <r:RibbonSplitMenuItem Header="Redo 1" />
                         <r:RibbonSplitMenuItem Header="Redo 2" />
                         <r:RibbonSplitMenuItem Header="Redo 3"  />

@@ -33,6 +33,8 @@ namespace Paint.ViewModel
         private Line curLine;
         private Shape curShape;
         private int Outline = 1;
+        private int STT = 0;
+        private int Isdelete = 0;
         private ContentControl curControl;
         private bool IsShape = false;
         private bool IsColor1 = true;
@@ -45,6 +47,7 @@ namespace Paint.ViewModel
         private System.Windows.Media.Brush _colorFill;
         private int StrokeThickness = 1;
         private bool isItemMenu = false;
+        private List<System.Windows.Controls.Image> StkShape = new List<System.Windows.Controls.Image>();
         private ICommand _Canvas_MouseMove;
         private ICommand _Canvas_MouseUp;
         private ICommand _StrokeThicknessCommand;
@@ -66,6 +69,8 @@ namespace Paint.ViewModel
         private ICommand _HeartCommand;
         private ICommand _FillCommand;
         private ICommand _BucketCommand;
+        private ICommand _UndoCommand;
+        private ICommand _RedoCommand;
         public MainWindowViewModel()
         {
             ColorFill = Color1;
@@ -87,10 +92,14 @@ namespace Paint.ViewModel
 
         private void OnCanvas_MouseUp(Canvas canvas)
         {
+            if (STT < StkShape.Count - 1)
+            {
+                StkShape.RemoveRange(STT, StkShape.Count - (STT));
+            }
             isCanvas_MouseDown = false;
             if (drawType == DrawType.line)
             {
-
+                 curControl = new ContentControl();
                 Line Line = new Line();
 
                 Line.X1 = CurrentPointDown.X;
@@ -100,8 +109,14 @@ namespace Paint.ViewModel
 
                 Line.StrokeThickness = StrokeThickness;
                 Line.Stroke = Color1;
-                DrawShape(Line, Outline, canvas);
-
+                Canvas.SetLeft(curControl, Line.Margin.Left);
+                Canvas.SetTop(curControl, Line.Margin.Top);
+                curControl.Width = Line.Width;
+                curControl.Height = Line.Height;
+                curControl.Content = Line;
+                curControl.Background = Color1;
+                DrawShape(curControl, Outline, canvas);
+               
                 curLine = null;
             }
             else if (drawType == DrawType.ellipse || drawType == DrawType.rectangle || drawType == DrawType.triangle || drawType == DrawType.arrow || drawType == DrawType.heart)
@@ -149,21 +164,28 @@ namespace Paint.ViewModel
                 curControl.Content = temp;
                 curControl.Background = Color1;
                 DrawShape(curControl, Outline, canvas);
+               
 
-                
                 curShape = null;
             }
             else if(drawType==DrawType.bucket)
             {
                 System.Drawing.Color color = new System.Drawing.Color();
-                color = System.Drawing.Color.FromArgb(((System.Windows.Media.Color)(ColorFill.GetValue(SolidColorBrush.ColorProperty))).A,
-                    ((System.Windows.Media.Color)(ColorFill.GetValue(SolidColorBrush.ColorProperty))).R,
-                    ((System.Windows.Media.Color)(ColorFill.GetValue(SolidColorBrush.ColorProperty))).G,
-                    ((System.Windows.Media.Color)(ColorFill.GetValue(SolidColorBrush.ColorProperty))).B);
+                color = System.Drawing.Color.FromArgb(((System.Windows.Media.Color)(Color1.GetValue(SolidColorBrush.ColorProperty))).A,
+                    ((System.Windows.Media.Color)(Color1.GetValue(SolidColorBrush.ColorProperty))).R,
+                    ((System.Windows.Media.Color)(Color1.GetValue(SolidColorBrush.ColorProperty))).G,
+                    ((System.Windows.Media.Color)(Color1.GetValue(SolidColorBrush.ColorProperty))).B);
                 Bitmap bm = CanvasToBitmap(canvas);
                 FloodFill(bm, new System.Drawing.Point((int)Mouse.GetPosition(canvas).X, (int)Mouse.GetPosition(canvas).Y), color, canvas);
-
+               
+               
             }
+            else
+            {
+                
+                RefreshCanvas(canvas);
+            }
+           
         }
 
         public ICommand Canvas_MouseMove
@@ -203,7 +225,6 @@ namespace Paint.ViewModel
                         }
                         else if (drawType == DrawType.triangle)
                         {
-
                             curShape = new Triangle();
                             ((Triangle)curShape).Start = CurrentPointDown;
                         }
@@ -406,6 +427,8 @@ namespace Paint.ViewModel
             get
             {
                 _ColorCommand = new RelayCommand<RibbonButton>((p) => true, OnColorCommand);
+
+
                 return _ColorCommand;
             }
 
@@ -639,6 +662,69 @@ namespace Paint.ViewModel
             }
         }
 
+        public ICommand UndoCommand
+        {
+            get
+            {
+                _UndoCommand = new RelayCommand<Canvas>((p) => true, OnUndoCommand);
+                return _UndoCommand;
+            }
+
+            set
+            {
+                _UndoCommand = value;
+            }
+        }
+
+        public ICommand RedoCommand
+        {
+            get
+            {
+                _RedoCommand = new RelayCommand<Canvas>((p) => true, OnRedoCommand);
+                return _RedoCommand;
+            }
+
+            set
+            {
+                _RedoCommand = value;
+            }
+        }
+
+        private void OnRedoCommand(Canvas canvas)
+        {
+
+            if (STT < StkShape.Count)
+            {
+                STT++;
+                canvas.Children.Clear();
+                canvas.Children.Add(StkShape[STT - 1]);
+            }
+
+        }
+
+        private void OnUndoCommand(Canvas canvas)
+        {
+            if(STT==StkShape.Count&& Isdelete==0)
+            {
+                canvas.Children.Remove(curControl);
+                Isdelete = 1;
+              
+            }
+           else if (STT - 1 > 0 && Isdelete==1)
+            {
+                STT--;
+                canvas.Children.Clear();
+                canvas.Children.Add(StkShape[STT - 1]);
+            } else if(STT-1==0)
+            {
+                System.Windows.Controls.Image img = new System.Windows.Controls.Image();
+                img.Width = canvas.ActualWidth;
+                img.Height = canvas.ActualHeight;
+                canvas.Children.Clear();
+                canvas.Children.Add(img);
+            }
+        }
+
         private void OnBucketCommand(Canvas canvas)
         {
             drawType = DrawType.bucket;
@@ -799,6 +885,7 @@ namespace Paint.ViewModel
         }
         public void DrawShape(ContentControl control, int outline, Canvas canvas)
         {
+
             canvas.Children.RemoveAt(canvas.Children.Count - 1);
             RefreshCanvas(canvas);
             if (outline == 1)
@@ -818,6 +905,7 @@ namespace Paint.ViewModel
 
             canvas.Children.Add(control);
 
+            
         }
 
         public void RefreshCanvas( Canvas canvas)
@@ -826,7 +914,13 @@ namespace Paint.ViewModel
             img.Width = canvas.ActualWidth;
             img.Height = canvas.ActualHeight;
             img.Source = BitmapToImageSource(CanvasToBitmap(canvas));
+            if (STT <= 10)
+            {
+                StkShape.Add(img);
+                STT++;
+            }
             canvas.Children.Clear();
+            
             canvas.Children.Add(img);
         }
         private ImageSource BitmapToImageSource(Bitmap bm)
@@ -920,6 +1014,10 @@ namespace Paint.ViewModel
             img.Source = BitmapToImageSource(bm);
             canvas.Children.Clear();
             canvas.Children.Add(img);
+        }
+        public void RemoveShape(ContentControl shape,Canvas canvas)
+        {
+            canvas.Children.Remove(shape);
         }
     }
 }
