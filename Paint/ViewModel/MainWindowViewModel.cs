@@ -21,7 +21,7 @@ namespace Paint.ViewModel
 {
 
     enum DrawType { pencil, brush, line, ellipse, rectangle, triangle, arrow, heart, fill, erase, text,bucket };
-    public class MainWindowViewModel:Control, INotifyPropertyChanged
+    public class MainWindowViewModel : Control, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChanged(string propertyName)
@@ -34,16 +34,17 @@ namespace Paint.ViewModel
         private Shape curShape;
         private int Outline = 1;
         private int STT = 0;
+        private string CurrentPath=null;
         private int Isdelete = 0;
         private ContentControl curControl;
         private bool IsShape = false;
         private bool IsColor1 = true;
-        private bool IsCheckFill=false;
+        private bool IsCheckFill = false;
         private bool isCanvas_MouseDown = false;
         System.Windows.Point CurrentPointDown = new System.Windows.Point();
         System.Windows.Point CurrentPointMove = new System.Windows.Point();
         private ICommand _Canvas_MouseDown;
-        private System.Windows.Media.Brush _color1 =new SolidColorBrush(Colors.Black), _color2=new SolidColorBrush(Colors.White);
+        private System.Windows.Media.Brush _color1 = new SolidColorBrush(Colors.Black), _color2 = new SolidColorBrush(Colors.White);
         private System.Windows.Media.Brush _colorFill;
         private int StrokeThickness = 1;
         private bool isItemMenu = false;
@@ -71,6 +72,10 @@ namespace Paint.ViewModel
         private ICommand _BucketCommand;
         private ICommand _UndoCommand;
         private ICommand _RedoCommand;
+        private ICommand _OpenFileCommand;
+        private ICommand _SaveFileCommand;
+        private ICommand _NewFileCommand;
+        private ICommand _ExitCommand;
         public MainWindowViewModel()
         {
             ColorFill = Color1;
@@ -99,7 +104,7 @@ namespace Paint.ViewModel
             isCanvas_MouseDown = false;
             if (drawType == DrawType.line)
             {
-                 curControl = new ContentControl();
+                curControl = new ContentControl();
                 Line Line = new Line();
 
                 Line.X1 = CurrentPointDown.X;
@@ -116,7 +121,7 @@ namespace Paint.ViewModel
                 curControl.Content = Line;
                 curControl.Background = Color1;
                 DrawShape(curControl, Outline, canvas);
-               
+
                 curLine = null;
             }
             else if (drawType == DrawType.ellipse || drawType == DrawType.rectangle || drawType == DrawType.triangle || drawType == DrawType.arrow || drawType == DrawType.heart)
@@ -126,7 +131,7 @@ namespace Paint.ViewModel
                 if (drawType == DrawType.ellipse)
                 {
                     temp = new Ellipse();
-                 
+
                 }
                 else if (drawType == DrawType.rectangle)
                 {
@@ -156,7 +161,7 @@ namespace Paint.ViewModel
                 temp.Stroke = Color1;
                 temp.StrokeThickness = StrokeThickness;
                 temp.IsHitTestVisible = true;
-                if(IsCheckFill)temp.Fill = ColorFill;
+                if (IsCheckFill) temp.Fill = ColorFill;
                 Canvas.SetLeft(curControl, curShape.Margin.Left);
                 Canvas.SetTop(curControl, curShape.Margin.Top);
                 curControl.Width = curShape.Width;
@@ -164,11 +169,11 @@ namespace Paint.ViewModel
                 curControl.Content = temp;
                 curControl.Background = Color1;
                 DrawShape(curControl, Outline, canvas);
-               
+
 
                 curShape = null;
             }
-            else if(drawType==DrawType.bucket)
+            else if (drawType == DrawType.bucket)
             {
                 System.Drawing.Color color = new System.Drawing.Color();
                 color = System.Drawing.Color.FromArgb(((System.Windows.Media.Color)(Color1.GetValue(SolidColorBrush.ColorProperty))).A,
@@ -177,15 +182,17 @@ namespace Paint.ViewModel
                     ((System.Windows.Media.Color)(Color1.GetValue(SolidColorBrush.ColorProperty))).B);
                 Bitmap bm = CanvasToBitmap(canvas);
                 FloodFill(bm, new System.Drawing.Point((int)Mouse.GetPosition(canvas).X, (int)Mouse.GetPosition(canvas).Y), color, canvas);
-               
-               
+
+
+
+
             }
             else
             {
-                
+
                 RefreshCanvas(canvas);
             }
-           
+
         }
 
         public ICommand Canvas_MouseMove
@@ -263,61 +270,61 @@ namespace Paint.ViewModel
                     if (IsCheckFill) curShape.Fill = ColorFill;
                     curShape.Width = Math.Abs(CurrentPointMove.X - CurrentPointDown.X);
                     curShape.Height = Math.Abs(CurrentPointMove.Y - CurrentPointDown.Y);
-                    
-                  
-                    if(addShape)
-                    DrawCapture(curShape, canvas);
-                }else
+
+
+                    if (addShape)
+                        DrawCapture(curShape, canvas);
+                } else
                     if (drawType == DrawType.brush || drawType == DrawType.erase || drawType == DrawType.pencil)
+                {
+                    Line line = new Line();
+                    line.Stroke = Color1;
+
+                    if (drawType == DrawType.erase)
                     {
-                        Line line = new Line();
-                        line.Stroke = Color1;
-
-                        if (drawType == DrawType.erase)
-                        {
-                            line.Stroke = Color2;
-                            StrokeThickness = 15;
-                        }
-                        else if (drawType == DrawType.brush && !isItemMenu)
-                        {
-                            StrokeThickness = 3;
-                        }
-                        else if (!isItemMenu)
-                            StrokeThickness = 1;
-                        line.StrokeThickness = StrokeThickness;
-                        line.X1 = CurrentPointDown.X;
-                        line.Y1 = CurrentPointDown.Y;
-                        line.X2 = Mouse.GetPosition(canvas).X;
-                        line.Y2 = Mouse.GetPosition(canvas).Y;
-
-
-                        CurrentPointDown = Mouse.GetPosition(canvas);
-                        canvas.Children.Add(line);
-
-
+                        line.Stroke = Color2;
+                        StrokeThickness = 15;
                     }
-                    else if (drawType == DrawType.line)
+                    else if (drawType == DrawType.brush && !isItemMenu)
                     {
-                        if (curLine == null)
-                        {
-                            curLine = new Line();
-                            addShape = true;
-                        }
-                        curLine.X1 = CurrentPointDown.X;
-                        curLine.Y1 = CurrentPointDown.Y;
-                        curLine.X2 = CurrentPointMove.X;
-                        curLine.Y2 = CurrentPointMove.Y;
+                        StrokeThickness = 3;
+                    }
+                    else if (!isItemMenu)
+                        StrokeThickness = 1;
+                    line.StrokeThickness = StrokeThickness;
+                    line.X1 = CurrentPointDown.X;
+                    line.Y1 = CurrentPointDown.Y;
+                    line.X2 = Mouse.GetPosition(canvas).X;
+                    line.Y2 = Mouse.GetPosition(canvas).Y;
 
-                        curLine.StrokeThickness = StrokeThickness;
-                        curLine.Stroke = Color1;
 
-                        if (addShape)
-                        {
-                            DrawCapture(curLine, canvas);
-                        }
+                    CurrentPointDown = Mouse.GetPosition(canvas);
+                    canvas.Children.Add(line);
+
+
+                }
+                else if (drawType == DrawType.line)
+                {
+                    if (curLine == null)
+                    {
+                        curLine = new Line();
+                        addShape = true;
+                    }
+                    curLine.X1 = CurrentPointDown.X;
+                    curLine.Y1 = CurrentPointDown.Y;
+                    curLine.X2 = CurrentPointMove.X;
+                    curLine.Y2 = CurrentPointMove.Y;
+
+                    curLine.StrokeThickness = StrokeThickness;
+                    curLine.Stroke = Color1;
+
+                    if (addShape)
+                    {
+                        DrawCapture(curLine, canvas);
                     }
                 }
-            
+            }
+
         }
         public ICommand Canvas_MouseDown
         {
@@ -336,9 +343,9 @@ namespace Paint.ViewModel
             CurrentPointDown = Mouse.GetPosition(canvas);
             isCanvas_MouseDown = true;
 
-         
-                
-            
+
+
+
         }
         public System.Windows.Media.Brush Color1
         {
@@ -362,7 +369,7 @@ namespace Paint.ViewModel
 
             set
             {
-                _color2 = value;NotifyPropertyChanged("Color2");
+                _color2 = value; NotifyPropertyChanged("Color2");
             }
         }
 
@@ -493,7 +500,7 @@ namespace Paint.ViewModel
                 _PenCommand = value;
             }
         }
-        
+
         public Canvas Canvas
         {
             get { return (Canvas)GetValue(MainWindowViewModel.CanvasProperty); }
@@ -630,7 +637,7 @@ namespace Paint.ViewModel
             }
             set
             {
-                _colorFill = value;NotifyPropertyChanged("ColorFill");
+                _colorFill = value; NotifyPropertyChanged("ColorFill");
             }
         }
 
@@ -688,6 +695,191 @@ namespace Paint.ViewModel
             {
                 _RedoCommand = value;
             }
+        }
+
+        public ICommand OpenFileCommand
+        {
+            get
+            {
+                _OpenFileCommand = new RelayCommand<Canvas>((p) => true, OnOpenFileCommand);
+                return _OpenFileCommand;
+            }
+
+            set
+            {
+                _OpenFileCommand = value;
+            }
+        }
+
+        public ICommand SaveFileCommand
+        {
+            get
+            {
+                _SaveFileCommand = new RelayCommand<Canvas>((p) => true, OnSaveFileCommand);
+                return _SaveFileCommand;
+            }
+
+            set
+            {
+                _SaveFileCommand = value;
+            }
+        }
+
+        public ICommand NewFileCommand
+        {
+            get
+            {
+                _NewFileCommand = new RelayCommand<Canvas>((p) => true, OnNewFileCommand);
+                return _NewFileCommand;
+            }
+
+            set
+            {
+                _NewFileCommand = value;
+            }
+        }
+
+        public ICommand ExitCommand
+        {
+            get
+            {
+                _ExitCommand = new RelayCommand<Canvas>((p) => true, OnExitCommand);
+                return _ExitCommand;
+            }
+
+            set
+            {
+                _ExitCommand = value;
+            }
+        }
+
+        private void OnExitCommand(Canvas canvas)
+        {
+            if(CurrentPath==null&&canvas.Children.Count==0)
+            Application.Current.Shutdown();
+            else if(canvas.Children.Count>0)
+            {
+              if( MessageBox.Show("Bạn có muốn lưu không", "Lưu ý", MessageBoxButton.YesNo, MessageBoxImage.Question)==MessageBoxResult.Yes)
+                {
+                    OnSaveFileCommand(canvas);
+                    Application.Current.Shutdown();
+                }
+                else
+                {
+                    Application.Current.Shutdown();
+                }
+            }
+            
+        }
+
+        private void OnNewFileCommand(Canvas canvas)
+        {
+            System.Windows.Controls.Image img = new System.Windows.Controls.Image();
+            img.Height = canvas.ActualHeight;
+            img.Width = canvas.ActualWidth;
+            canvas.Children.Clear();
+            canvas.Children.Add(img);
+        }
+
+        private void OnSaveFileCommand(Canvas canvas)
+        {
+            Rect bounds = VisualTreeHelper.GetDescendantBounds(canvas);
+            double dpi = 96d;
+            RenderTargetBitmap rtb = new RenderTargetBitmap((int)bounds.Width, (int)bounds.Height, dpi, dpi, System.Windows.Media.PixelFormats.Default);
+            DrawingVisual dv = new DrawingVisual();
+            using (DrawingContext dc = dv.RenderOpen())
+            {
+                VisualBrush vb = new VisualBrush(canvas);
+                dc.DrawRectangle(vb, null, new Rect(new System.Windows.Point(), bounds.Size));
+            }
+            rtb.Render(dv);
+            BitmapEncoder pngEncoder = new PngBitmapEncoder();
+            pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
+            try
+            {
+                System.IO.MemoryStream ms = new System.IO.MemoryStream();
+
+                pngEncoder.Save(ms);
+
+                ms.Close();
+                ms.Dispose();
+                System.Windows.Forms.SaveFileDialog dlg = new System.Windows.Forms.SaveFileDialog();
+                dlg.Title = "Save as";
+                dlg.Filter = "Bitmap files (*.bmp)|*.bmp|JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|PNG (*.png)|*.png|All files (*.*)|*.*";
+                if (CurrentPath == null)
+                {
+                    if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        string fileName = dlg.FileName;
+                        System.IO.File.WriteAllBytes(fileName, ms.ToArray());
+                    }
+                }
+                else
+                {
+                    System.IO.File.WriteAllBytes(CurrentPath, ms.ToArray());
+                }
+                CurrentPath = dlg.FileName;
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void OnOpenFileCommand(Canvas canvas)
+        {
+            System.Windows.Forms.OpenFileDialog dlg = new System.Windows.Forms.OpenFileDialog();
+            dlg.Title = "Choose an image file";
+            dlg.Filter = "Bitmap files (*.bmp)|*.bmp|JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|PNG (*.png)|*.png|All files (*.*)|*.*";
+            try
+            {
+                if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    ImageBrush brush = new ImageBrush();
+                    BitmapImage img = new BitmapImage(new Uri(dlg.FileName, UriKind.Relative));
+                    var encoder = new PngBitmapEncoder();
+                    encoder.Frames.Add(BitmapFrame.Create(img));
+                    string tempPath = CreateTempFile();
+                    using (var stream = System.IO.File.Open(tempPath, System.IO.FileMode.Open))
+                    {
+                        encoder.Save(stream);
+                        stream.Close();
+                    }
+                    BitmapImage temp = new BitmapImage(new Uri(tempPath, UriKind.Relative));
+                    brush.ImageSource = temp;
+                    canvas.Children.Clear();
+                    canvas.Background = brush;
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("Error: Could not read file from disk.\nOriginal error: " + ex.Message);
+            }
+            CurrentPath = dlg.FileName;
+        }
+
+        private string CreateTempFile()
+        {
+            string fileName = string.Empty;
+
+            try
+            {
+                fileName = System.IO.Path.GetTempFileName();
+
+                // Create a FileInfo object to set the file's attributes
+                System.IO.FileInfo fileInfo = new System.IO.FileInfo(fileName);
+
+                // Set the Attribute property of this file to Temporary. 
+                fileInfo.Attributes = System.IO.FileAttributes.Temporary;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to create tempfile\nDetail: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+            return fileName;
         }
 
         private void OnRedoCommand(Canvas canvas)
@@ -1012,12 +1204,14 @@ namespace Paint.ViewModel
             img.Width = canvas.ActualWidth;
             img.Height = canvas.ActualHeight;
             img.Source = BitmapToImageSource(bm);
+            if (STT <= 10)
+            {
+                StkShape.Add(img);
+                STT++;
+            }
             canvas.Children.Clear();
             canvas.Children.Add(img);
         }
-        public void RemoveShape(ContentControl shape,Canvas canvas)
-        {
-            canvas.Children.Remove(shape);
-        }
+    
     }
 }
