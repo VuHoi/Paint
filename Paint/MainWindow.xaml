@@ -8,6 +8,7 @@
        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
        xmlns:r="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
         Title="MainWindow" Height="350" Width="525"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:ViewModel="clr-namespace:Paint.ViewModel">
     <Window.DataContext>
         <ViewModel:MainWindowViewModel></ViewModel:MainWindowViewModel>
@@ -23,6 +24,8 @@
         <ViewModel:MainWindowViewModel  Canvas="{Binding DataContext.Canvas,ElementName=Canvas}"
           x:Key="KeyMainWindowVIewModel">
         </ViewModel:MainWindowViewModel>
+        <sys:Int32 x:Key="IntZero">3</sys:Int32>
+        <ViewModel:IntToBoolConverter x:Key="KeyIntToBoolViewModel"></ViewModel:IntToBoolConverter>
     </Window.Resources>
     <Grid DataContext="{StaticResource KeyMainWindowVIewModel}">
         
@@ -35,18 +38,19 @@
             <r:Ribbon.HelpPaneContent>
                 <r:RibbonButton Height="30" SmallImageSource="Resources/help.png"></r:RibbonButton>
             </r:Ribbon.HelpPaneContent>
-            <r:Ribbon.QuickAccessToolBar>
+            <r:Ribbon.QuickAccessToolBar >
                 <r:RibbonQuickAccessToolBar>
                     <r:RibbonButton Command="{Binding SaveFileCommand}" CommandParameter="{Binding ElementName=Canvas}" Margin="50,0,0,0" Height="20" SmallImageSource="Resources/save.png"></r:RibbonButton>
-                    <r:RibbonSplitButton  Command="{Binding UndoCommand}" CommandParameter="{Binding ElementName=Canvas}" Height="20" SmallImageSource="Resources/edit_undo.png">
-                        <r:RibbonSplitMenuItem Header="Undo 1" />
-                        <r:RibbonSplitMenuItem Header="Undo 2" />
-                        <r:RibbonSplitMenuItem Header="Undo 3" />
+                    <r:RibbonSplitButton  Command="{Binding UndoCommand}" CommandParameter="{Binding ElementName=Canvas}" Name="A" Height="20" SmallImageSource="Resources/edit_undo.png">
+                        <r:RibbonSplitMenuItem Header="Undo 1" Command="{Binding UndoNumberCommand}" CommandParameter="{Binding One}">
+                        </r:RibbonSplitMenuItem>
+                        <r:RibbonSplitMenuItem Header="Undo 2" Command="{Binding UndoNumberCommand}" CommandParameter="{Binding Two}" />
+                        <r:RibbonSplitMenuItem Header="Undo 3" Command="{Binding UndoNumberCommand}" CommandParameter="{Binding Three}" />
                     </r:RibbonSplitButton>
                     <r:RibbonSplitButton Command="{Binding RedoCommand}" CommandParameter="{Binding ElementName=Canvas}"  Height="20" SmallImageSource="Resources/edit_redo.png">
-                        <r:RibbonSplitMenuItem Header="Redo 1" />
-                        <r:RibbonSplitMenuItem Header="Redo 2" />
-                        <r:RibbonSplitMenuItem Header="Redo 3"  />
+                        <r:RibbonSplitMenuItem Header="Redo 1" Command="{Binding RedoNumberCommand}"  CommandParameter="{Binding One}" />
+                        <r:RibbonSplitMenuItem Header="Redo 2" Command="{Binding RedoNumberCommand}"  CommandParameter="{Binding Two}"/>
+                        <r:RibbonSplitMenuItem Header="Redo 3" Command="{Binding RedoNumberCommand}"  CommandParameter="{Binding Three}" />
                     </r:RibbonSplitButton>
                 </r:RibbonQuickAccessToolBar>
             </r:Ribbon.QuickAccessToolBar>
@@ -82,7 +86,7 @@
                 <r:RibbonGroup  Header="Tool">
                     <r:RibbonButton Command="{Binding BrushCommand}" CommandParameter="{Binding ElementName=Canvas}" LargeImageSource="Resources/brush.png" Width="70" Label="Brush" KeyTip="X" />
                     <r:RibbonButton Command="{Binding PenCommand}" CommandParameter="{Binding ElementName=Canvas}" SmallImageSource="Resources/pen.png" Width="70" Label="Pen" KeyTip="X" />
-                    <r:RibbonButton SmallImageSource="Resources/text.png" Width="70" Label="Text" KeyTip="C" />
+                    <r:RibbonButton Command="{Binding TextCommand}" CommandParameter="{Binding ElementName=Canvas}" SmallImageSource="Resources/text.png" Width="70" Label="Text" KeyTip="C" />
                     <r:RibbonButton Command="{Binding EraserCommand}" CommandParameter="{Binding ElementName=Canvas}" SmallImageSource="Resources/eraser.png" Width="70" Label="Eraser" KeyTip="C" />
                 </r:RibbonGroup>
                 <r:RibbonGroup  Header="Shapes">
