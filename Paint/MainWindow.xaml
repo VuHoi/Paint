@@ -8,8 +8,16 @@
        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
        xmlns:r="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
         Title="MainWindow" Height="350" Width="525"
-        
         xmlns:ViewModel="clr-namespace:Paint.ViewModel">
+    <Window.DataContext>
+        <ViewModel:MainWindowViewModel></ViewModel:MainWindowViewModel>
+    </Window.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction CommandParameter="{Binding ElementName=Canvas}"  Command="{Binding ExitCommand}" 
+                              />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <!--Canvas="{Binding DataContext.Canvas,ElementName=Canvas}"-->
     <Window.Resources>
         <ViewModel:MainWindowViewModel  Canvas="{Binding DataContext.Canvas,ElementName=Canvas}"
@@ -29,7 +37,7 @@
             </r:Ribbon.HelpPaneContent>
             <r:Ribbon.QuickAccessToolBar>
                 <r:RibbonQuickAccessToolBar>
-                    <r:RibbonButton Margin="50,0,0,0" Height="20" SmallImageSource="Resources/save.png"></r:RibbonButton>
+                    <r:RibbonButton Command="{Binding SaveFileCommand}" CommandParameter="{Binding ElementName=Canvas}" Margin="50,0,0,0" Height="20" SmallImageSource="Resources/save.png"></r:RibbonButton>
                     <r:RibbonSplitButton  Command="{Binding UndoCommand}" CommandParameter="{Binding ElementName=Canvas}" Height="20" SmallImageSource="Resources/edit_undo.png">
                         <r:RibbonSplitMenuItem Header="Undo 1" />
                         <r:RibbonSplitMenuItem Header="Undo 2" />
@@ -45,10 +53,10 @@
             <!--#region Application Menu-->
             <r:Ribbon.ApplicationMenu>
                 <r:RibbonApplicationMenu>
-                    <r:RibbonApplicationMenuItem Width="200" ImageSource="Resources/new.png"  Header="New"></r:RibbonApplicationMenuItem>
-                    <r:RibbonApplicationMenuItem ImageSource="Resources/folder_open.png"  Header="Open"></r:RibbonApplicationMenuItem>
-                    <r:RibbonApplicationMenuItem ImageSource="Resources/save.png"  Header="Save"></r:RibbonApplicationMenuItem>
-                    <r:RibbonApplicationMenuItem ImageSource="Resources/exit.png"  Header="Exit"></r:RibbonApplicationMenuItem>
+                    <r:RibbonApplicationMenuItem Command="{Binding NewFileCommand}" CommandParameter="{Binding ElementName=Canvas}" Width="200" ImageSource="Resources/new.png"  Header="New"></r:RibbonApplicationMenuItem>
+                    <r:RibbonApplicationMenuItem Command="{Binding OpenFileCommand}" CommandParameter="{Binding ElementName=Canvas}" ImageSource="Resources/folder_open.png"  Header="Open"></r:RibbonApplicationMenuItem>
+                    <r:RibbonApplicationMenuItem Command="{Binding SaveFileCommand}" CommandParameter="{Binding ElementName=Canvas}" ImageSource="Resources/save.png"  Header="Save"></r:RibbonApplicationMenuItem>
+                    <r:RibbonApplicationMenuItem Command="{Binding ExitCommand}" CommandParameter="{Binding ElementName=Canvas}" ImageSource="Resources/exit.png"  Header="Exit"></r:RibbonApplicationMenuItem>
                 </r:RibbonApplicationMenu>
             </r:Ribbon.ApplicationMenu>
 
@@ -62,7 +70,7 @@
                     <r:RibbonButton Width="70" SmallImageSource="Resources/copy.png" Label="Copy" KeyTip="C" />
                 </r:RibbonGroup>
                 <r:RibbonGroup Header="Image">
-                    <r:RibbonMenuButton Width="70"  LargeImageSource="Resources/select.png" Label="Paste" KeyTip="V">
+                    <r:RibbonMenuButton Width="70"  LargeImageSource="Resources/select.png" Label="Select" KeyTip="V">
                     </r:RibbonMenuButton>
                     <r:RibbonButton SmallImageSource="Resources/cut.png" Width="70" Label="Crop" KeyTip="X" />
                     <r:RibbonButton SmallImageSource="Resources/resize.png" Width="70" Label="Resize" KeyTip="C" />
@@ -156,6 +164,7 @@
                     <i:InvokeCommandAction CommandParameter="{Binding ElementName=Canvas}"  Command="{Binding Canvas_MouseUp}" 
                               />
                 </i:EventTrigger>
+                
             </i:Interaction.Triggers>
           
         </Canvas>
