@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-
 using System.Windows.Media.Animation;
 using System.Windows.Input;
 using System.Windows.Shapes;
@@ -20,7 +19,7 @@ using System.IO;
 namespace Paint.ViewModel
 {
 
-    enum DrawType { pencil, brush, line, ellipse, rectangle, triangle, arrow, heart, fill, erase, text,bucket };
+    enum DrawType { pencil, brush, line, ellipse, rectangle, triangle, arrow, heart, fill, erase, text, bucket };
     public class MainWindowViewModel : Control, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -34,9 +33,17 @@ namespace Paint.ViewModel
         private Shape curShape;
         private int Outline = 1;
         private int STT = 0, NumberUndo = 1, NumberRedo = 1;
-        private string CurrentPath=null;
+        private string CurrentPath = null;
         private int Isdelete = 0;
         private ContentControl curControl;
+        private TextBox txtCurrentTextbox, txtFocus = new TextBox();
+        private System.Windows.Media.FontFamily fontFamily;
+        private double fontSize;
+        private System.Windows.FontStyle fontStyle;
+        private FontWeight fontWeight;
+        private TextDecorationCollection decoration;
+        private System.Windows.Media.Color fontColor;
+        bool bold = false, italic = false, underlined = false;
         private bool IsShape = false;
         private bool IsColor1 = true;
         private bool IsCheckFill = false;
@@ -47,7 +54,7 @@ namespace Paint.ViewModel
         private System.Windows.Media.Brush _color1 = new SolidColorBrush(Colors.Black), _color2 = new SolidColorBrush(Colors.White);
         private System.Windows.Media.Brush _colorFill;
         private int StrokeThickness = 1;
-        private int one = 1,two=2,three=3;
+        private int one = 1, two = 2, three = 3;
         private bool isItemMenu = false;
         private List<System.Windows.Controls.Image> StkShape = new List<System.Windows.Controls.Image>();
         private ICommand _Canvas_MouseMove;
@@ -80,11 +87,22 @@ namespace Paint.ViewModel
         private ICommand _UndoNumberCommand;
         private ICommand _RedoNumberCommand;
         private ICommand _TextCommand;
-
+        private ICommand _BoldCommand;
+        private ICommand _ItalicCommand;
+        private ICommand _UnderlinedCommand;
+        private ICommand _FontFamilycommand;
+        private ICommand _SizeTextCommand;
         public MainWindowViewModel()
         {
             ColorFill = Color1;
             drawType = DrawType.brush;
+            
+            fontSize = 14;
+            fontFamily = new System.Windows.Media.FontFamily("Arial");
+            fontColor = (System.Windows.Media.Color)(Color1.GetValue(SolidColorBrush.ColorProperty));
+            fontStyle = FontStyles.Normal;
+            fontWeight = FontWeights.Normal;
+            decoration = null;
         }
         public ICommand Canvas_MouseUp
         {
@@ -191,9 +209,17 @@ namespace Paint.ViewModel
 
 
             }
+            else if (drawType == DrawType.text)
+            {
+                try
+                {
+                    txtCurrentTextbox.Focus();
+                    
+                }
+                catch { }
+            }
             else
             {
-
                 RefreshCanvas(canvas);
             }
 
@@ -222,7 +248,7 @@ namespace Paint.ViewModel
 
                 if ((drawType == DrawType.ellipse || drawType == DrawType.rectangle || drawType == DrawType.triangle || drawType == DrawType.arrow || drawType == DrawType.heart) && IsShape)
                 {
-
+                    txtFocus.Focus();
                     if (curShape == null)
                     {
 
@@ -278,9 +304,11 @@ namespace Paint.ViewModel
 
                     if (addShape)
                         DrawCapture(curShape, canvas);
-                } else
+                }
+                else
                     if (drawType == DrawType.brush || drawType == DrawType.erase || drawType == DrawType.pencil)
                 {
+                    txtFocus.Focus();
                     Line line = new Line();
                     line.Stroke = Color1;
 
@@ -309,6 +337,7 @@ namespace Paint.ViewModel
                 }
                 else if (drawType == DrawType.line)
                 {
+                    txtFocus.Focus();
                     if (curLine == null)
                     {
                         curLine = new Line();
@@ -327,13 +356,67 @@ namespace Paint.ViewModel
                         DrawCapture(curLine, canvas);
                     }
                 }
-                if(drawType==DrawType.text)
+                else if (drawType == DrawType.text)
                 {
+                    if (txtCurrentTextbox == null)
+                    {
+                        txtCurrentTextbox = new TextBox();
+                        txtCurrentTextbox.FontFamily = fontFamily;
+                        txtCurrentTextbox.FontSize = fontSize;
+                        txtCurrentTextbox.FontStyle = fontStyle;
+                        txtCurrentTextbox.FontWeight = fontWeight;
+                        txtCurrentTextbox.TextWrapping = TextWrapping.Wrap;
+                       
+                        if (decoration != null)
+                        {
+                            txtCurrentTextbox.TextDecorations = decoration;
+                        }
 
+                        txtCurrentTextbox.TextWrapping = TextWrapping.Wrap;
+                        txtCurrentTextbox.LostFocus += TxtCurrentTextbox_LostFocus;
+                        txtCurrentTextbox.SelectionChanged += TxtCurrentTextbox_SelectionChanged;
+                        addShape = true;
+                    }
+                    txtCurrentTextbox.Margin = new Thickness(CurrentPointDown.X, CurrentPointDown.Y, 0, 0);
+                    txtCurrentTextbox.MinHeight = Math.Abs(CurrentPointMove.Y - CurrentPointDown.Y);
+                    txtCurrentTextbox.Width = Math.Abs(CurrentPointMove.X - CurrentPointDown.X);
+
+                    if (addShape)
+                    {
+                        canvas.Children.Add(txtCurrentTextbox);
+                    }
                 }
             }
 
         }
+
+        private void TxtCurrentTextbox_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                fontColor = (System.Windows.Media.Color)(Color1.GetValue(SolidColorBrush.ColorProperty));
+                txtCurrentTextbox.Foreground = new SolidColorBrush(fontColor);
+                txtCurrentTextbox.FontFamily = fontFamily;
+                txtCurrentTextbox.FontSize = fontSize;
+                txtCurrentTextbox.FontStyle = fontStyle;
+                txtCurrentTextbox.FontWeight = fontWeight;
+                if (decoration != null)
+                {
+                    txtCurrentTextbox.TextDecorations = decoration;
+                }
+            }
+            catch { }
+            
+        }
+
+        private void TxtCurrentTextbox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            (sender as TextBox).BorderThickness = new Thickness(0);
+            (sender as TextBox).IsReadOnly = true;
+            (sender as TextBox).Background = System.Windows.Media.Brushes.Transparent;
+            txtCurrentTextbox = null;
+        }
+
         public ICommand Canvas_MouseDown
         {
             get
@@ -349,8 +432,20 @@ namespace Paint.ViewModel
         private void OnCanvas_MouseDown(Canvas canvas)
         {
             CurrentPointDown = Mouse.GetPosition(canvas);
-            isCanvas_MouseDown = true;
 
+            isCanvas_MouseDown = true;
+            if (drawType == DrawType.text)
+            {
+
+                try
+                {
+                    canvas.Children.Add(txtFocus);
+                }
+                catch { }
+                txtFocus.BorderThickness = new Thickness(0);
+                txtFocus.Focus();
+
+            }
 
 
 
@@ -765,7 +860,7 @@ namespace Paint.ViewModel
         {
             get
             {
-                _UndoNumberCommand = new RelayCommand<int>((p) =>  OnUndoNumberCommand(p));
+                _UndoNumberCommand = new RelayCommand<int>((p) => OnUndoNumberCommand(p));
                 return _UndoNumberCommand;
             }
 
@@ -779,7 +874,7 @@ namespace Paint.ViewModel
         {
             get
             {
-                _RedoNumberCommand=new RelayCommand<int>((p)=>OnRedoNumberCommand(p));
+                _RedoNumberCommand = new RelayCommand<int>((p) => OnRedoNumberCommand(p));
                 return _RedoNumberCommand;
             }
 
@@ -842,9 +937,185 @@ namespace Paint.ViewModel
             }
         }
 
+        public ICommand BoldCommand
+        {
+            get
+            {
+                _BoldCommand = new RelayCommand<RibbonRadioButton>((p) => true, OnBoldCommand);
+                return _BoldCommand;
+            }
+
+            set
+            {
+                _BoldCommand = value;
+            }
+        }
+
+        public ICommand ItalicCommand
+        {
+            get
+            {
+                _ItalicCommand = new RelayCommand<RibbonRadioButton>((p) => true, OnItalicCommand);
+                return _ItalicCommand;
+            }
+
+            set
+            {
+                _ItalicCommand = value;
+            }
+        }
+
+        public ICommand UnderlinedCommand
+        {
+            get
+            {
+                _UnderlinedCommand = new RelayCommand<RibbonRadioButton>((p) => true, OnUnderlinedCommand);
+                return _UnderlinedCommand;
+            }
+
+            set
+            {
+                _UnderlinedCommand = value;
+            }
+        }
+
+        public bool Bold
+        {
+            get
+            {
+                return bold;
+            }
+
+            set
+            {
+                bold = value;NotifyPropertyChanged("Bold");
+            }
+        }
+
+        public bool Italic
+        {
+            get
+            {
+                return italic;
+            }
+
+            set
+            {
+                italic = value; NotifyPropertyChanged("Italic");
+            }
+        }
+
+        public bool Underlined
+        {
+            get
+            {
+                return underlined;
+            }
+
+            set
+            {
+                underlined = value; NotifyPropertyChanged("Underlined");
+            }
+        }
+
+        public ICommand FontFamilycommand
+        {
+            get
+            {
+                _FontFamilycommand = new RelayCommand<ComboBox>((p) => true, OnFontFamilyCommand);
+                return _FontFamilycommand;
+            }
+
+            set
+            {
+                _FontFamilycommand = value;
+            }
+        }
+
+        public ICommand SizeTextCommand
+        {
+            get
+            {
+                _SizeTextCommand = new RelayCommand<ComboBox>((p) => true, OnSizeTextCommand);
+                return _SizeTextCommand;
+            }
+
+            set
+            {
+                _SizeTextCommand = value;
+            }
+        }
+
+        private void OnSizeTextCommand(ComboBox obj)
+        {
+            ComboBoxItem ComboItem = (ComboBoxItem)obj.SelectedItem;
+            string value = ComboItem.Content.ToString();
+            fontSize = Convert.ToDouble(value);
+            if (txtCurrentTextbox!=null)
+            {
+                txtCurrentTextbox.FontSize = fontSize;
+            }
+        }
+
+        private void OnFontFamilyCommand(ComboBox obj)
+        {
+            fontFamily = new System.Windows.Media.FontFamily(obj.SelectedItem.ToString());
+            if (txtCurrentTextbox != null)
+            {
+                txtCurrentTextbox.FontFamily = fontFamily;
+            }
+        }
+
+        int k = 0;
+        private void OnUnderlinedCommand(RibbonRadioButton obj)
+        {
+            if (k == 0) { Underlined = true; k = 1; }
+            else { Underlined = false; k = 0; }
+            if (Underlined)
+            {
+                if (txtCurrentTextbox != null)
+                {
+                    if (txtCurrentTextbox.TextDecorations == null)
+                    {
+                        txtCurrentTextbox.TextDecorations = new TextDecorationCollection();
+                    }
+                    txtCurrentTextbox.TextDecorations = TextDecorations.Underline;
+                }
+            }
+            else
+            {
+                if (txtCurrentTextbox != null)
+                {
+                    txtCurrentTextbox.TextDecorations = null;
+                }
+            }
+            
+        }
+        int j = 0;
+        private void OnItalicCommand(RibbonRadioButton obj)
+        {
+            if (j == 0) { Italic = true; j = 1; }
+            else { Italic = false; j = 0; }
+            if (Italic)
+            { fontStyle = FontStyles.Italic; txtCurrentTextbox.FontStyle = FontStyle; }
+            else { fontStyle = FontStyles.Normal; }
+            txtCurrentTextbox.FontStyle = FontStyle;
+        }
+        int i = 0;
+        private void OnBoldCommand(RibbonRadioButton obj)
+        {
+            if (i == 0) { Bold = true; i = 1; }
+            else { Bold = false; i = 0; }
+            if (Bold)
+            { fontWeight = FontWeights.Bold; }
+            else { fontWeight = FontWeights.Normal; }
+            txtCurrentTextbox.FontWeight = FontWeight;
+        }
+
         private void OnTextCommand(Canvas canvas)
         {
             drawType = DrawType.text;
+            canvas.Cursor = Cursors.IBeam;
         }
 
         private void OnRedoNumberCommand(int numberRedo)
@@ -859,11 +1130,11 @@ namespace Paint.ViewModel
 
         private void OnExitCommand(Canvas canvas)
         {
-            if(CurrentPath==null&&canvas.Children.Count==0)
-            Application.Current.Shutdown();
-            else if(canvas.Children.Count>0)
+            if (CurrentPath == null && canvas.Children.Count == 0)
+                Application.Current.Shutdown();
+            else if (canvas.Children.Count > 0)
             {
-              if( MessageBox.Show("Bạn có muốn lưu không", "Lưu ý", MessageBoxButton.YesNo, MessageBoxImage.Question)==MessageBoxResult.Yes)
+                if (MessageBox.Show("Bạn có muốn lưu không", "Lưu ý", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     OnSaveFileCommand(canvas);
                     Application.Current.Shutdown();
@@ -873,7 +1144,7 @@ namespace Paint.ViewModel
                     Application.Current.Shutdown();
                 }
             }
-            
+
         }
 
         private void OnNewFileCommand(Canvas canvas)
@@ -953,7 +1224,7 @@ namespace Paint.ViewModel
                     brush.ImageSource = temp;
                     canvas.Children.Clear();
                     canvas.Background = brush;
-                    
+
                 }
             }
             catch (Exception ex)
@@ -989,9 +1260,9 @@ namespace Paint.ViewModel
         private void OnRedoCommand(Canvas canvas)
         {
 
-            if (STT+NumberRedo-1 < StkShape.Count)
+            if (STT + NumberRedo - 1 < StkShape.Count)
             {
-                STT+=NumberRedo;
+                STT += NumberRedo;
                 canvas.Children.Clear();
                 canvas.Children.Add(StkShape[STT - 1]);
             }
@@ -1033,7 +1304,7 @@ namespace Paint.ViewModel
             {
                 IsCheckFill = true;
             }
-            else IsCheckFill=false;
+            else IsCheckFill = false;
         }
 
         private void OnHeartCommand(Canvas obj)
@@ -1084,7 +1355,7 @@ namespace Paint.ViewModel
         {
             isItemMenu = false;
             drawType = DrawType.pencil;
-            obj.Cursor= Cursors.Pen;
+            obj.Cursor = Cursors.Pen;
         }
 
         private void OnEraserCommand(Canvas obj)
@@ -1138,11 +1409,11 @@ namespace Paint.ViewModel
 
         private void OnStrokeCommand(RibbonButton canvas)
         {
-           if(IsColor1)
+            if (IsColor1)
             {
                 Color1 = canvas.Background;
             }
-           else
+            else
             {
                 Color2 = canvas.Background;
             }
@@ -1172,8 +1443,8 @@ namespace Paint.ViewModel
         }
 
         private DrawType drawType;
-       
-        public void DrawCapture(Shape shape,Canvas canvas)
+
+        public void DrawCapture(Shape shape, Canvas canvas)
         {
             double[] dashes = { 2, 2 };
             shape.StrokeDashArray = new System.Windows.Media.DoubleCollection(dashes);
@@ -1201,10 +1472,10 @@ namespace Paint.ViewModel
 
             canvas.Children.Add(control);
 
-            
+
         }
 
-        public void RefreshCanvas( Canvas canvas)
+        public void RefreshCanvas(Canvas canvas)
         {
             System.Windows.Controls.Image img = new System.Windows.Controls.Image();
             img.Width = canvas.ActualWidth;
@@ -1216,7 +1487,7 @@ namespace Paint.ViewModel
                 STT++;
             }
             canvas.Children.Clear();
-            
+
             canvas.Children.Add(img);
         }
         private ImageSource BitmapToImageSource(Bitmap bm)
@@ -1249,7 +1520,7 @@ namespace Paint.ViewModel
             return bm;
         }
 
-        public void DrawShape(Shape shape, int outline,Canvas canvas)
+        public void DrawShape(Shape shape, int outline, Canvas canvas)
         {
             RefreshCanvas(canvas);
             if (outline == 1)
@@ -1274,7 +1545,7 @@ namespace Paint.ViewModel
         {
             return ((c1.A == c2.A) && (c1.B == c2.B) && (c1.G == c2.G) && (c1.R == c2.R));
         }
-        public void FloodFill(System.Drawing.Bitmap bm, System.Drawing.Point p, System.Drawing.Color Color,Canvas canvas)
+        public void FloodFill(System.Drawing.Bitmap bm, System.Drawing.Point p, System.Drawing.Color Color, Canvas canvas)
         {
             Stack<System.Drawing.Point> S = new Stack<System.Drawing.Point>();
             System.Drawing.Color OriColor = bm.GetPixel(p.X, p.Y);
@@ -1316,6 +1587,6 @@ namespace Paint.ViewModel
             canvas.Children.Clear();
             canvas.Children.Add(img);
         }
-    
+
     }
 }

@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/arrow.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/bold.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/brush.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/capture.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/color-picker.png")]
@@ -17,6 +18,8 @@
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/fill.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/heart.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/hexagon.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/underlined.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/italic.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/mix.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/rectangle.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/smooth.png")]

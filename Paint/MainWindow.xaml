@@ -104,7 +104,7 @@
                         <r:RibbonMenuItem Name="item3px" Command="{Binding StrokeThicknessCommand}" CommandParameter="{Binding ElementName=item3px}" Height="30"  ImageSource="Resources/thickness3.png" Header="3px" ></r:RibbonMenuItem>
                         <r:RibbonMenuItem Name="item5px" Command="{Binding StrokeThicknessCommand}" CommandParameter="{Binding ElementName=item5px}" Height="30" ImageSource="Resources/thickness5.png" Header="5px" ></r:RibbonMenuItem>
                         <r:RibbonMenuItem Name="item10px" Command="{Binding StrokeThicknessCommand}" CommandParameter="{Binding ElementName=item10px}" Height="30" ImageSource="Resources/thickness7.png" Header="10px" ></r:RibbonMenuItem>
-                       
+
                     </r:RibbonMenuButton>
                 </r:RibbonGroup >
                 <r:RibbonGroup Header="Outline">
@@ -125,7 +125,7 @@
                             <TextBlock Background="{Binding Color2}" Height="30" Width="30" ></TextBlock>
                             <TextBlock Padding="0,2,0,0" Text="Color 2"></TextBlock>
                         </StackPanel>
-                        
+
                     </Button>
                     <r:RibbonControlGroup>
                         <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor1" CommandParameter="{Binding ElementName=btncolor1}" Height="30" Width="30" Background="Black"></r:RibbonButton>
@@ -149,11 +149,98 @@
                     </r:RibbonControlGroup>
                     <r:RibbonButton Width="70" Command="{Binding ColorCommand}" LargeImageSource="Resources/color-picker.png" Label="Color" KeyTip="V">
                     </r:RibbonButton>
-                    
+
+                </r:RibbonGroup>
+            </r:RibbonTab>
+            <r:RibbonTab Header="Text">
+                <r:RibbonGroup>
+                    <ComboBox   IsEditable="True" Width="150" Margin="5"   Background="White" SelectedIndex="0" Name="cmbFontFamily" ItemsSource="{Binding Source={x:Static Fonts.SystemFontFamilies}}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction CommandParameter="{Binding ElementName=cmbFontFamily}"  Command="{Binding FontFamilycommand}" 
+                              />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                    <StackPanel Orientation="Horizontal">
+                        <ComboBox Margin="5" IsEditable="True" Name="cmbFontSize" SelectedIndex="5" Width="50" ScrollViewer.VerticalScrollBarVisibility="Disabled" MaxDropDownHeight="500"  >
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction CommandParameter="{Binding ElementName=cmbFontSize}"  Command="{Binding SizeTextCommand}" 
+                              />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <ComboBoxItem Content="8" />
+                            <ComboBoxItem Content="9"/>
+                            <ComboBoxItem Content="10"/>
+                            <ComboBoxItem Content="11"/>
+                            <ComboBoxItem Content="12"/>
+                            <ComboBoxItem Content="14"/>
+                            <ComboBoxItem Content="16"/>
+                            <ComboBoxItem Content="18"/>
+                            <ComboBoxItem Content="20"/>
+                            <ComboBoxItem Content="22"/>
+                            <ComboBoxItem Content="24"/>
+                            <ComboBoxItem Content="26"/>
+                            <ComboBoxItem Content="28"/>
+                            <ComboBoxItem Content="36"/>
+                            <ComboBoxItem Content="48"/>
+                            <ComboBoxItem Content="72"/>
+                           
+                        </ComboBox>
+                        <Grid>
+                            <r:RibbonRadioButton IsChecked="{Binding Bold}" Command="{Binding BoldCommand}" Name="rdoBold" CommandParameter="{Binding ElementName=rdoBold}" Padding="2" SmallImageSource="Resources/Bold.png" ></r:RibbonRadioButton>
+                        </Grid>
+                        <Grid>
+                            <r:RibbonRadioButton IsChecked="{Binding Italic}" Command="{Binding ItalicCommand}" Padding="3" SmallImageSource="Resources/italic.png" ></r:RibbonRadioButton>
+                        </Grid>
+                        <Grid>
+                            <r:RibbonRadioButton IsChecked="{Binding Underlined}" Command="{Binding UnderlinedCommand}" Padding="2" SmallImageSource="Resources/underlined.png" ></r:RibbonRadioButton>
+                        </Grid>
+                    </StackPanel>
+                </r:RibbonGroup>
+                <r:RibbonGroup 
+                               Header="Color">
+                    <Button Command="{Binding ChooseColor1Command}" BorderThickness="0" Padding="2,0,0,0"  Height="65"  Width="70">
+                        <StackPanel>
+                            <TextBlock Background="{Binding Color1}" Height="30" Width="30" ></TextBlock>
+                            <TextBlock Padding="0,2,0,0"  Text="Color 1"></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Command="{Binding ChooseColor2Command}" BorderThickness="0" Padding="2,0,0,0" Height="65"  Width="70">
+                        <StackPanel>
+                            <TextBlock Background="{Binding Color2}" Height="30" Width="30" ></TextBlock>
+                            <TextBlock Padding="0,2,0,0" Text="Color 2"></TextBlock>
+                        </StackPanel>
+
+                    </Button>
+                    <r:RibbonControlGroup>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor11_1" CommandParameter="{Binding ElementName=btncolor11_1}" Height="30" Width="30" Background="Black"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor21" CommandParameter="{Binding ElementName=btncolor21}" Height="30" Width="30" Background="White"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor31" CommandParameter="{Binding ElementName=btncolor31}" Height="30" Width="30" Background="Blue"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor41" CommandParameter="{Binding ElementName=btncolor41}" Height="30" Width="30" Background="yellow"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor51" CommandParameter="{Binding ElementName=btncolor51}" Height="30" Width="30" Background="Orange"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor61" CommandParameter="{Binding ElementName=btncolor61}" Height="30" Width="30" Background="Brown"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor71" CommandParameter="{Binding ElementName=btncolor71}" Height="30" Width="30" Background="BlueViolet"></r:RibbonButton>
+
+                    </r:RibbonControlGroup>
+                    <r:RibbonControlGroup>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor81" CommandParameter="{Binding ElementName=btncolor81}" Height="30" Width="30" Background="Chocolate"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor91" CommandParameter="{Binding ElementName=btncolor91}" Height="30" Width="30" Background="DarkOliveGreen"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor101" CommandParameter="{Binding ElementName=btncolor101}" Height="30" Width="30" Background="DimGray"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor111" CommandParameter="{Binding ElementName=btncolor111}" Height="30" Width="30" Background="Firebrick"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor121" CommandParameter="{Binding ElementName=btncolor121}" Height="30" Width="30" Background="DarkRed"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor131" CommandParameter="{Binding ElementName=btncolor131}" Height="30" Width="30" Background="Red"></r:RibbonButton>
+                        <r:RibbonButton Command="{Binding StrokeCommand}" Name="btncolor141" CommandParameter="{Binding ElementName=btncolor141}" Height="30" Width="30" Background="Green"></r:RibbonButton>
+
+                    </r:RibbonControlGroup>
+                    <r:RibbonButton Width="70" Command="{Binding ColorCommand}" LargeImageSource="Resources/color-picker.png" Label="Color" KeyTip="V">
+                    </r:RibbonButton>
+
                 </r:RibbonGroup>
             </r:RibbonTab>
         </r:Ribbon>
-        <Canvas x:Name="Canvas"  Background="{Binding Color2}"
+        <Canvas Cursor="Pen" x:Name="Canvas"  Background="{Binding Color2}"
                		Grid.Row="1"	   >
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDown">
@@ -170,7 +257,8 @@
                 </i:EventTrigger>
                 
             </i:Interaction.Triggers>
-          
+            
+           
         </Canvas>
         
     </Grid>

@@ -63,3 +63,6 @@ C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\arrow.png
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\heart.png
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\fill.png
 C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\Diy Paint Bucket.ico
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\bold.png
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\underlined.png
+C:\Users\Vu Khac Hoi\Documents\GitHub\Paint\Paint\bin\Debug\Resources\italic.png
