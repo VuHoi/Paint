@@ -252,32 +252,17 @@
                 </r:RibbonGroup>
             </r:RibbonTab>
         </r:Ribbon>
-        <Canvas Cursor="Pen" x:Name="Canvas"  Background="{Binding Color2}"
+        <Canvas  Cursor="Pen" x:Name="Canvas"  Background="{Binding Color2}"
                		Grid.Row="1"	   >
             <Canvas.Resources>
-                <ControlTemplate x:Key="MoveThumbTemplate"  TargetType="{x:Type ViewModel:MoveThumb}">
-                    <Rectangle Fill="Transparent"/>
-                </ControlTemplate>
 
-                <Style x:Key="DesignerItemStyle" TargetType="ContentControl">
-                    <Setter Property="MinHeight" Value="50"/>
-                    <Setter Property="MinWidth" Value="50"/>
-                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
-                    <Setter Property="SnapsToDevicePixels" Value="true"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ContentControl">
-                                <Grid DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
-                                    <ViewModel:MoveThumb Cursor="SizeAll" Template="{StaticResource MoveThumbTemplate}" />
-                                    <ContentPresenter Content="{TemplateBinding ContentControl.Content}"
-                              Margin="{TemplateBinding Padding}"/>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="View/DesignerItem.xaml"/>
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
 
-                                </Grid>
-
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
+                
 
             </Canvas.Resources>
             <i:Interaction.Triggers>

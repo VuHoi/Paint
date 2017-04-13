@@ -137,19 +137,22 @@ namespace Paint.ViewModel
                 Line.Y1 = CurrentPointDown.Y;
                 Line.X2 = CurrentPointMove.X;
                 Line.Y2 = CurrentPointMove.Y;
+                try
+                {
+                    Line.StrokeThickness = StrokeThickness;
+                    Line.Stroke = Color1;
+                    Canvas.SetLeft(curControl, Line.Margin.Left);
+                    Canvas.SetTop(curControl, Line.Margin.Top);
+                    curControl.Width = Line.Width;
+                    curControl.Height = Line.Height;
+                    curControl.Content = Line;
+                    curControl.Background = Color1;
+                    curControl.Style = canvas.Resources["DesignerItemStyle"] as Style;
+                    DrawShape(curControl, Outline, canvas);
 
-                Line.StrokeThickness = StrokeThickness;
-                Line.Stroke = Color1;
-                Canvas.SetLeft(curControl, Line.Margin.Left);
-                Canvas.SetTop(curControl, Line.Margin.Top);
-                curControl.Width = Line.Width;
-                curControl.Height = Line.Height;
-                curControl.Content = Line;
-                curControl.Background = Color1;
-                curControl.Style = canvas.Resources["DesignerItemStyle"] as Style;
-                DrawShape(curControl, Outline, canvas);
-
-                curLine = null;
+                    curLine = null;
+                }
+                catch(Exception e) { MessageBox.Show(e.Message); }
             }
             else if (drawType == DrawType.ellipse || drawType == DrawType.rectangle || drawType == DrawType.triangle || drawType == DrawType.arrow || drawType == DrawType.heart)
             {
@@ -185,32 +188,39 @@ namespace Paint.ViewModel
                     temp.Width = curShape.Width;
                     temp.Height = curShape.Height;
                 }
-                temp.Stroke = Color1;
-                temp.StrokeThickness = StrokeThickness;
-                temp.IsHitTestVisible = true;
-                if (IsCheckFill) temp.Fill = ColorFill;
-                Canvas.SetLeft(curControl, curShape.Margin.Left);
-                Canvas.SetTop(curControl, curShape.Margin.Top);
-                curControl.Width = curShape.Width;
-                curControl.Height = curShape.Height;
-                curControl.Content = temp;
-                curControl.Background = Color1;
-                curControl.Style = canvas.Resources["DesignerItemStyle"] as Style;
-                DrawShape(curControl, Outline, canvas);
+                try
+                {
+                    temp.Stroke = Color1;
+                    temp.StrokeThickness = StrokeThickness;
+                    temp.IsHitTestVisible = true;
+                    if (IsCheckFill) temp.Fill = ColorFill;
+                    Canvas.SetLeft(curControl, curShape.Margin.Left);
+                    Canvas.SetTop(curControl, curShape.Margin.Top);
+                    curControl.Width = curShape.Width;
+                    curControl.Height = curShape.Height;
+                    curControl.Content = temp;
+                    curControl.Background = Color1;
+                    curControl.Style = canvas.Resources["DesignerItemStyle"] as Style;
+                    DrawShape(curControl, Outline, canvas);
 
 
-                curShape = null;
+                    curShape = null;
+                }
+                catch(Exception e) { MessageBox.Show(e.Message); }
             }
             else if (drawType == DrawType.bucket)
             {
-                System.Drawing.Color color = new System.Drawing.Color();
-                color = System.Drawing.Color.FromArgb(((System.Windows.Media.Color)(Color1.GetValue(SolidColorBrush.ColorProperty))).A,
-                    ((System.Windows.Media.Color)(Color1.GetValue(SolidColorBrush.ColorProperty))).R,
-                    ((System.Windows.Media.Color)(Color1.GetValue(SolidColorBrush.ColorProperty))).G,
-                    ((System.Windows.Media.Color)(Color1.GetValue(SolidColorBrush.ColorProperty))).B);
-                Bitmap bm = CanvasToBitmap(canvas);
-                FloodFill(bm, new System.Drawing.Point((int)Mouse.GetPosition(canvas).X, (int)Mouse.GetPosition(canvas).Y), color, canvas);
-
+                try
+                {
+                    System.Drawing.Color color = new System.Drawing.Color();
+                    color = System.Drawing.Color.FromArgb(((System.Windows.Media.Color)(Color1.GetValue(SolidColorBrush.ColorProperty))).A,
+                        ((System.Windows.Media.Color)(Color1.GetValue(SolidColorBrush.ColorProperty))).R,
+                        ((System.Windows.Media.Color)(Color1.GetValue(SolidColorBrush.ColorProperty))).G,
+                        ((System.Windows.Media.Color)(Color1.GetValue(SolidColorBrush.ColorProperty))).B);
+                    Bitmap bm = CanvasToBitmap(canvas);
+                    FloodFill(bm, new System.Drawing.Point((int)Mouse.GetPosition(canvas).X, (int)Mouse.GetPosition(canvas).Y), color, canvas);
+                }
+                catch (Exception e) { MessageBox.Show(e.Message); }
 
 
 
@@ -1090,7 +1100,7 @@ namespace Paint.ViewModel
         {
             if (drawType == DrawType.nothing)
             {
-                    Selector.SetIsSelected(curControl, true);
+                Selector.SetIsSelected(canvas.Children[1], true);
             }
         }
 
