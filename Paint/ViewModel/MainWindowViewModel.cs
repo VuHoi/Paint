@@ -15,11 +15,12 @@ using Microsoft.Windows.Controls.Ribbon;
 using System.Drawing;
 using System.Windows.Media.Imaging;
 using System.IO;
+using System.Windows.Controls.Primitives;
 
 namespace Paint.ViewModel
 {
 
-    enum DrawType { pencil, brush, line, ellipse, rectangle, triangle, arrow, heart, fill, erase, text, bucket };
+    enum DrawType {nothing, pencil, brush, line, ellipse, rectangle, triangle, arrow, heart, fill, erase, text, bucket };
     public class MainWindowViewModel : Control, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -92,6 +93,9 @@ namespace Paint.ViewModel
         private ICommand _UnderlinedCommand;
         private ICommand _FontFamilycommand;
         private ICommand _SizeTextCommand;
+        private ICommand _NothingCommand;
+        private ICommand _PreviewMouseLeftButtonDownSelectCommand;
+        private ICommand _PreviewMouseUpButtonDownSelectCommand;
         public MainWindowViewModel()
         {
             ColorFill = Color1;
@@ -142,6 +146,7 @@ namespace Paint.ViewModel
                 curControl.Height = Line.Height;
                 curControl.Content = Line;
                 curControl.Background = Color1;
+                curControl.Style = canvas.Resources["DesignerItemStyle"] as Style;
                 DrawShape(curControl, Outline, canvas);
 
                 curLine = null;
@@ -190,6 +195,7 @@ namespace Paint.ViewModel
                 curControl.Height = curShape.Height;
                 curControl.Content = temp;
                 curControl.Background = Color1;
+                curControl.Style = canvas.Resources["DesignerItemStyle"] as Style;
                 DrawShape(curControl, Outline, canvas);
 
 
@@ -366,7 +372,7 @@ namespace Paint.ViewModel
                         txtCurrentTextbox.FontStyle = fontStyle;
                         txtCurrentTextbox.FontWeight = fontWeight;
                         txtCurrentTextbox.TextWrapping = TextWrapping.Wrap;
-                       
+                        txtCurrentTextbox.AcceptsReturn = true;
                         if (decoration != null)
                         {
                             txtCurrentTextbox.TextDecorations = decoration;
@@ -1043,6 +1049,48 @@ namespace Paint.ViewModel
             set
             {
                 _SizeTextCommand = value;
+            }
+        }
+
+        public ICommand PreviewMouseLeftButtonDownSelectCommand
+        {
+            get
+            {
+                _PreviewMouseLeftButtonDownSelectCommand = new RelayCommand<Canvas>((p) => true, OnPreviewMouseLeftButtonDownSelectCommand);
+                return _PreviewMouseLeftButtonDownSelectCommand;
+            }
+
+            set
+            {
+                _PreviewMouseLeftButtonDownSelectCommand = value;
+            }
+        }
+
+        public ICommand NothingCommand
+        {
+            get
+            {
+                _NothingCommand = new RelayCommand<Canvas>((p) => true, OnNothingCommand);
+                return _NothingCommand;
+            }
+
+            set
+            {
+                _NothingCommand = value;
+            }
+        }
+
+        private void OnNothingCommand(Canvas obj)
+        {
+            obj.Cursor = Cursors.Arrow;
+            drawType = DrawType.nothing;
+        }
+
+        private void OnPreviewMouseLeftButtonDownSelectCommand(Canvas canvas)
+        {
+            if (drawType == DrawType.nothing)
+            {
+                    Selector.SetIsSelected(curControl, true);
             }
         }
 

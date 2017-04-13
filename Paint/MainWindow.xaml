@@ -9,7 +9,9 @@
        xmlns:r="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
         Title="MainWindow" Height="350" Width="525"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:ViewModel="clr-namespace:Paint.ViewModel">
+        xmlns:ViewModel="clr-namespace:Paint.ViewModel"
+        >
+    
     <Window.DataContext>
         <ViewModel:MainWindowViewModel></ViewModel:MainWindowViewModel>
     </Window.DataContext>
@@ -26,7 +28,15 @@
         </ViewModel:MainWindowViewModel>
         <sys:Int32 x:Key="IntZero">3</sys:Int32>
         <ViewModel:IntToBoolConverter x:Key="KeyIntToBoolViewModel"></ViewModel:IntToBoolConverter>
+        <!--<ResourceDictionary x:Key="key" >
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="View/DesignerItem.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>-->
+
+      
     </Window.Resources>
+   
     <Grid DataContext="{StaticResource KeyMainWindowVIewModel}">
         
         <Grid.RowDefinitions>
@@ -84,10 +94,12 @@
                     <r:RibbonButton  LargeImageSource="Resources/Diy Paint Bucket.ico" Command="{Binding BucketCommand}" CommandParameter="{Binding ElementName=Canvas}" Label="Bucket"></r:RibbonButton>
                 </r:RibbonGroup>
                 <r:RibbonGroup  Header="Tool">
-                    <r:RibbonButton Command="{Binding BrushCommand}" CommandParameter="{Binding ElementName=Canvas}" LargeImageSource="Resources/brush.png" Width="70" Label="Brush" KeyTip="X" />
-                    <r:RibbonButton Command="{Binding PenCommand}" CommandParameter="{Binding ElementName=Canvas}" SmallImageSource="Resources/pen.png" Width="70" Label="Pen" KeyTip="X" />
-                    <r:RibbonButton Command="{Binding TextCommand}" CommandParameter="{Binding ElementName=Canvas}" SmallImageSource="Resources/text.png" Width="70" Label="Text" KeyTip="C" />
-                    <r:RibbonButton Command="{Binding EraserCommand}" CommandParameter="{Binding ElementName=Canvas}" SmallImageSource="Resources/eraser.png" Width="70" Label="Eraser" KeyTip="C" />
+                    <r:RibbonButton Command="{Binding BrushCommand}"  CommandParameter="{Binding ElementName=Canvas}" LargeImageSource="Resources/brush.png" Width="50" Label="Brush" KeyTip="X" />
+                    <r:RibbonButton Command="{Binding PenCommand}" Height="30" CommandParameter="{Binding ElementName=Canvas}" SmallImageSource="Resources/pen.png" Width="50" Label="Pen" KeyTip="X" />
+                    <r:RibbonButton Command="{Binding TextCommand}" Height="30" CommandParameter="{Binding ElementName=Canvas}" SmallImageSource="Resources/text.png" Width="50" Label="Text" KeyTip="C" />
+                    <r:RibbonButton Command="{Binding EraserCommand}" Height="30" CommandParameter="{Binding ElementName=Canvas}" SmallImageSource="Resources/eraser.png" Width="60" Label="Eraser" KeyTip="C" />
+                    <r:RibbonButton Command="{Binding NothingCommand}" Height="30" CommandParameter="{Binding ElementName=Canvas}" SmallImageSource="Resources/Arrow.png" Width="60" Label="Mouse" KeyTip="C" />
+
                 </r:RibbonGroup>
                 <r:RibbonGroup  Header="Shapes">
                     <r:RibbonButton Margin="5,0,0,0" Command="{Binding LineCommand}" CommandParameter="{Binding ElementName=Canvas}" Height="30"  SmallImageSource="Resources/line.png"   KeyTip="X" />
@@ -95,7 +107,7 @@
                     <r:RibbonButton Command="{Binding HeartCommand}" CommandParameter="{Binding ElementName=Canvas}" Height="30" Margin="5,0,0,0"  SmallImageSource="Resources/Heart.png"   KeyTip="C" />
                     <r:RibbonButton  Height="30" Margin="5,0,0,0"  Command="{Binding RectangleCommand}" CommandParameter="{Binding ElementName=Canvas}" SmallImageSource="Resources/rectangle.png"   KeyTip="X" />
                     <r:RibbonButton Margin="5,0,0,0" Command="{Binding TriangleCommand}" CommandParameter="{Binding ElementName=Canvas}" Height="30"   SmallImageSource="Resources/tritangle.png"   KeyTip="C" />
-                    <r:RibbonButton Margin="5,0,0,0" Command="{Binding ArrowCommand}" CommandParameter="{Binding ElementName=Canvas}" Height="30"   SmallImageSource="Resources/arrow.png"   KeyTip="C" />
+                    <r:RibbonButton Margin="5,0,0,0" Command="{Binding ArrowCommand}" CommandParameter="{Binding ElementName=Canvas}" Height="30"   SmallImageSource="Resources/Arrowshape.png"   KeyTip="C" />
                     <r:RibbonCheckBox Command="{Binding FillCommand}" CommandParameter="{Binding ElementName=ckbFill}" Name="ckbFill"  Label="Fill" LargeImageSource="Resources/fill.png"></r:RibbonCheckBox>
                 </r:RibbonGroup>
                 <r:RibbonGroup>
@@ -242,6 +254,32 @@
         </r:Ribbon>
         <Canvas Cursor="Pen" x:Name="Canvas"  Background="{Binding Color2}"
                		Grid.Row="1"	   >
+            <Canvas.Resources>
+                <ControlTemplate x:Key="MoveThumbTemplate"  TargetType="{x:Type ViewModel:MoveThumb}">
+                    <Rectangle Fill="Transparent"/>
+                </ControlTemplate>
+
+                <Style x:Key="DesignerItemStyle" TargetType="ContentControl">
+                    <Setter Property="MinHeight" Value="50"/>
+                    <Setter Property="MinWidth" Value="50"/>
+                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                    <Setter Property="SnapsToDevicePixels" Value="true"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ContentControl">
+                                <Grid DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                                    <ViewModel:MoveThumb Cursor="SizeAll" Template="{StaticResource MoveThumbTemplate}" />
+                                    <ContentPresenter Content="{TemplateBinding ContentControl.Content}"
+                              Margin="{TemplateBinding Padding}"/>
+
+                                </Grid>
+
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+
+            </Canvas.Resources>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDown">
                     <i:InvokeCommandAction CommandParameter="{Binding ElementName=Canvas}"  Command="{Binding Canvas_MouseDown}" 
@@ -255,7 +293,10 @@
                     <i:InvokeCommandAction CommandParameter="{Binding ElementName=Canvas}"  Command="{Binding Canvas_MouseUp}" 
                               />
                 </i:EventTrigger>
-                
+                <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                    <i:InvokeCommandAction CommandParameter="{Binding ElementName=Canvas}"  Command="{Binding PreviewMouseLeftButtonDownSelectCommand}" 
+                              />
+                </i:EventTrigger>
             </i:Interaction.Triggers>
             
            

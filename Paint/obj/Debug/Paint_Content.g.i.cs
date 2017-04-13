@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/arrow.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/arrowshape.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/bold.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/brush.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/capture.png")]
