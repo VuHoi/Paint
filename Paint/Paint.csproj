@@ -74,6 +74,7 @@
     </ApplicationDefinition>
     <Compile Include="ResizeRotateChrome.cs" />
     <Compile Include="SizeChrome.cs" />
+    <Compile Include="ViewModel\CurrentPage.cs" />
     <Compile Include="ViewModel\CustomShape.cs" />
     <Compile Include="ViewModel\DesignerItemDecorator.cs" />
     <Compile Include="ViewModel\IntToBoolConverter.cs" />
@@ -133,9 +134,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\arrow.png">
@@ -271,9 +269,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Hoi\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
