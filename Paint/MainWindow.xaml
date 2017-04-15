@@ -282,6 +282,10 @@
                     <i:InvokeCommandAction CommandParameter="{Binding ElementName=Canvas}"  Command="{Binding PreviewMouseLeftButtonDownSelectCommand}" 
                               />
                 </i:EventTrigger>
+                <i:EventTrigger EventName="PreviewMouseUpButtonDownSelectCommand">
+                    <i:InvokeCommandAction CommandParameter="{Binding ElementName=Canvas}"  Command="{Binding PreviewMouseLeftButtonDownSelectCommand}" 
+                              />
+                </i:EventTrigger>
             </i:Interaction.Triggers>
             
            
